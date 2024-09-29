@@ -1,9 +1,11 @@
 package org.project.userManagement;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class App {
     public static void main(String[] args) {
-        HelloWorld helloWorld = new HelloWorld();
-
-        System.out.println(helloWorld.printHelloWorld());
+        SpringApplication.run(App.class, args);
     }
 }
