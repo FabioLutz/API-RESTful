@@ -2,7 +2,7 @@ package org.project.userManagement;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.project.userManagement.Controllers.HelloWorld;
+import org.project.userManagement.controllers.HelloWorld;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
