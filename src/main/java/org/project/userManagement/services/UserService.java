@@ -30,4 +30,8 @@ public class UserService {
             return Optional.empty();
         }
     }
+
+    public UserDto createUser(User user) {
+        return convertToDto(userRepository.save(user));
+    }
 }
