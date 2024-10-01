@@ -1,37 +1,38 @@
-package org.project.userManagement.services;
+package org.project.userManagement.service;
 
+import org.project.userManagement.dto.CreateUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.models.User;
+import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static org.project.userManagement.mapper.UserMapper.convertCreateUserToEntity;
+import static org.project.userManagement.mapper.UserMapper.convertEntityToDto;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private static UserDto convertToDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setUsername(user.getUsername());
-        return userDto;
-    }
-
     public Optional<UserDto> findUserByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        UserDto userDto;
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            userDto = convertToDto(user);
+            UserDto userDto = convertEntityToDto(user);
             return Optional.of(userDto);
         } else {
             return Optional.empty();
         }
     }
 
-    public UserDto createUser(User user) {
-        return convertToDto(userRepository.save(user));
+    public Boolean existsByUsername(String username) {
+        return findUserByUsername(username).isPresent();
+    }
+
+    public UserDto createUser(CreateUserDto createUserDto) {
+        return convertEntityToDto(userRepository.save(convertCreateUserToEntity(createUserDto)));
     }
 }

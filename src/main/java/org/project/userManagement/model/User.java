@@ -1,4 +1,4 @@
-package org.project.userManagement.models;
+package org.project.userManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -16,7 +16,6 @@ import lombok.ToString;
 @Table(name = "users_tb")
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)

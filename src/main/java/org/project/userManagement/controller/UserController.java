@@ -1,8 +1,9 @@
-package org.project.userManagement.controllers;
+package org.project.userManagement.controller;
 
+import org.project.userManagement.dto.CreateUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.models.User;
-import org.project.userManagement.services.UserService;
+import org.project.userManagement.mapper.UserMapper;
+import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> postUser(@RequestBody User user) {
-        UserDto userDto = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+    public ResponseEntity<UserDto> postUser(@RequestBody CreateUserDto createUserDto) {
+        if (!(userService.existsByUsername(createUserDto.getUsername()))) {
+            UserDto userDto = userService.createUser(createUserDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        } else {
+            UserDto userDto = UserMapper.convertCreateUserToDto(createUserDto);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
+        }
     }
 }
