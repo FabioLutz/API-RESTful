@@ -2,6 +2,7 @@ package org.project.userManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,7 +22,13 @@ public class User {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
 
-    @Size(min = 2, max = 50, message = "The username must be between 2 and 50 characters")
+    @Email
+    @Size(min = 5, max = 50, message = "The email must be between 5 and 50 characters")
+    @NotBlank(message = "The email must not be blank")
+    @Column(name = "email", unique = true, nullable = false, length = 50)
+    private String email;
+
+    @Size(min = 2, max = 100, message = "The username must be between 2 and 50 characters")
     @NotBlank(message = "The username must not be blank")
     @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;

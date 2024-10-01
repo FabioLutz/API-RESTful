@@ -24,25 +24,36 @@ public class UserService {
             User user = optionalUser.get();
             UserDto userDto = convertEntityToDto(user);
             return Optional.of(userDto);
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<UserDto> findUserDtoByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            UserDto userDto = convertEntityToDto(user);
+            return Optional.of(userDto);
+        }
+        return Optional.empty();
     }
 
-    public Boolean existsByUsername(String username) {
-        return findUserDtoByUsername(username).isPresent();
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public UserDto createUserDto(CreateUserDto createUserDto) {
-        return convertEntityToDto(userRepository.save(convertCreateUserToEntity(createUserDto)));
+    public Boolean existsByEmail(String email) {
+        return findUserDtoByEmail(email).isPresent();
+    }
+
+    public UserDto createUser(CreateUserDto createUserDto) {
+        User user = convertCreateUserToEntity(createUserDto);
+        user = userRepository.save(user);
+        return convertEntityToDto(user);
     }
 
     public Boolean deleteUser(DeleteUserDto deleteUserDto) {
-        Optional<User> user = findUserByUsername(deleteUserDto.getUsername());
+        Optional<User> user = findUserByEmail(deleteUserDto.getEmail());
         if (user.isPresent()) {
             userRepository.deleteById(user.get().getId());
             return true;

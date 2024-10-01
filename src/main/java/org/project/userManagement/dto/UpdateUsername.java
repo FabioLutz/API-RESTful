@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DeleteUserDto {
+public class UpdateUsername {
     private String email;
+    private String username;
     private String password;
 }

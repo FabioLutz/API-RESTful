@@ -3,7 +3,6 @@ package org.project.userManagement.controller;
 import org.project.userManagement.dto.CreateUserDto;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,19 +19,21 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        Optional<UserDto> userDto = userService.findUserDtoByUsername(username);
-        return userDto.map(dto -> ResponseEntity.status(HttpStatus.OK).body(dto)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Optional<UserDto> optionalUserDto = userService.findUserDtoByUsername(username);
+        if (optionalUserDto.isPresent()) {
+            UserDto userDto = optionalUserDto.get();
+            return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PostMapping
     public ResponseEntity<UserDto> postUser(@RequestBody CreateUserDto createUserDto) {
-        if (!(userService.existsByUsername(createUserDto.getUsername()))) {
-            UserDto userDto = userService.createUserDto(createUserDto);
+        if (!(userService.existsByEmail(createUserDto.getEmail()))) {
+            UserDto userDto = userService.createUser(createUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
-        } else {
-            UserDto userDto = UserMapper.convertCreateUserToDto(createUserDto);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
         }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @DeleteMapping
