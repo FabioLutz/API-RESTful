@@ -1,6 +1,7 @@
 package org.project.userManagement.mapper;
 
 import org.project.userManagement.dto.CreateUserDto;
+import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.model.User;
 
@@ -28,6 +29,12 @@ public class UserMapper {
     public static UserDto convertCreateUserToDto(CreateUserDto createUserDto) {
         UserDto userDto = new UserDto();
         userDto.setUsername(createUserDto.getUsername());
+        return userDto;
+    }
+
+    public static UserDto convertDeleteUserToDto(DeleteUserDto deleteUserDto) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(deleteUserDto.getUsername());
         return userDto;
     }
 }

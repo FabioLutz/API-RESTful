@@ -1,6 +1,7 @@
 package org.project.userManagement.controller;
 
 import org.project.userManagement.dto.CreateUserDto;
+import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.service.UserService;
@@ -19,18 +20,26 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        Optional<UserDto> userDto = userService.findUserByUsername(username);
+        Optional<UserDto> userDto = userService.findUserDtoByUsername(username);
         return userDto.map(dto -> ResponseEntity.status(HttpStatus.OK).body(dto)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
     public ResponseEntity<UserDto> postUser(@RequestBody CreateUserDto createUserDto) {
         if (!(userService.existsByUsername(createUserDto.getUsername()))) {
-            UserDto userDto = userService.createUser(createUserDto);
+            UserDto userDto = userService.createUserDto(createUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
         } else {
             UserDto userDto = UserMapper.convertCreateUserToDto(createUserDto);
             return ResponseEntity.status(HttpStatus.CONFLICT).body(userDto);
         }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<UserDto> deleteUser(@RequestBody DeleteUserDto deleteUserDto) {
+        if (userService.deleteUser(deleteUserDto)) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

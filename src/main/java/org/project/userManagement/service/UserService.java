@@ -1,6 +1,7 @@
 package org.project.userManagement.service;
 
 import org.project.userManagement.dto.CreateUserDto;
+import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
@@ -17,7 +18,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<UserDto> findUserByUsername(String username) {
+    public Optional<UserDto> findUserDtoByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -28,11 +29,24 @@ public class UserService {
         }
     }
 
-    public Boolean existsByUsername(String username) {
-        return findUserByUsername(username).isPresent();
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
-    public UserDto createUser(CreateUserDto createUserDto) {
+    public Boolean existsByUsername(String username) {
+        return findUserDtoByUsername(username).isPresent();
+    }
+
+    public UserDto createUserDto(CreateUserDto createUserDto) {
         return convertEntityToDto(userRepository.save(convertCreateUserToEntity(createUserDto)));
+    }
+
+    public Boolean deleteUser(DeleteUserDto deleteUserDto) {
+        Optional<User> user = findUserByUsername(deleteUserDto.getUsername());
+        if (user.isPresent()) {
+            userRepository.deleteById(user.get().getId());
+            return true;
+        }
+        return false;
     }
 }
