@@ -21,7 +21,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
+            UserDto userDto = userMapper.userToUserDto(user);
             return Optional.of(userDto);
         }
         return Optional.empty();
@@ -31,7 +31,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
+            UserDto userDto = userMapper.userToUserDto(user);
             return Optional.of(userDto);
         }
         return Optional.empty();
@@ -54,9 +54,9 @@ public class UserService {
     }
 
     public UserDto createUser(CreateUserDto createUserDto) {
-        User user = UserMapper.INSTANCE.createUserDtoToUser(createUserDto);
+        User user = userMapper.createUserDtoToUser(createUserDto);
         user = userRepository.save(user);
-        return UserMapper.INSTANCE.userToUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     public Optional<UserDto> putUser(PutUserDto putUserDto) {
@@ -65,7 +65,7 @@ public class UserService {
             optionalUser.get().setUsername(putUserDto.getUsername());
             optionalUser.get().setPassword(putUserDto.getPassword());
             User user = userRepository.save(optionalUser.get());
-            return Optional.of(UserMapper.INSTANCE.userToUserDto(user));
+            return Optional.of(userMapper.userToUserDto(user));
         }
         return Optional.empty();
     }
@@ -86,7 +86,7 @@ public class UserService {
 
             if (isUptated) {
                 User user = userRepository.save(optionalUser.get());
-                return Optional.of(UserMapper.INSTANCE.userToUserDto(user));
+                return Optional.of(userMapper.userToUserDto(user));
             }
         }
         return Optional.empty();
