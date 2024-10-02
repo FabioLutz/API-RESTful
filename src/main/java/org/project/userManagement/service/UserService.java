@@ -2,6 +2,7 @@ package org.project.userManagement.service;
 
 import org.project.userManagement.dto.CreateUserDto;
 import org.project.userManagement.dto.DeleteUserDto;
+import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
@@ -39,6 +40,10 @@ public class UserService {
         return Optional.empty();
     }
 
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -55,6 +60,28 @@ public class UserService {
         User user = UserMapper.INSTANCE.createUserDtoToUser(createUserDto);
         user = userRepository.save(user);
         return UserMapper.INSTANCE.userToUserDto(user);
+    }
+
+    public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
+        Optional<User> optionalUser = findUserByEmail(patchUserDto.getEmail());
+        if (optionalUser.isPresent()) {
+            boolean isUptated = false;
+            if (patchUserDto.getUsername() != null) {
+                optionalUser.get().setUsername(patchUserDto.getUsername());
+                isUptated = true;
+            }
+
+            if (patchUserDto.getPassword() != null) {
+                optionalUser.get().setPassword(patchUserDto.getNewPassword());
+                isUptated = true;
+            }
+
+            if (isUptated) {
+                User user = userRepository.save(optionalUser.get());
+                return Optional.of(UserMapper.INSTANCE.userToUserDto(user));
+            }
+        }
+        return Optional.empty();
     }
 
     public Boolean deleteUser(DeleteUserDto deleteUserDto) {

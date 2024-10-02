@@ -13,7 +13,7 @@ public class CreateUserDto {
     @Email(message = "Invalid email")
     @Size(min = 5, max = 50, message = "The email must be between 5 and 50 characters")
     @NotBlank(message = "The email must not be blank")
-    @Column(name = "email", unique = true, nullable = false, length = 50)
+    @Column(name = "email", unique = true, nullable = false, length = 50, updatable = false)
     private String email;
 
     @Size(min = 2, max = 100, message = "The username must be between 2 and 100 characters")
