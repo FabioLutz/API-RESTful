@@ -1,9 +1,6 @@
 package org.project.userManagement.service;
 
-import org.project.userManagement.dto.CreateUserDto;
-import org.project.userManagement.dto.DeleteUserDto;
-import org.project.userManagement.dto.PatchUserDto;
-import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.dto.*;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
@@ -60,6 +57,17 @@ public class UserService {
         User user = UserMapper.INSTANCE.createUserDtoToUser(createUserDto);
         user = userRepository.save(user);
         return UserMapper.INSTANCE.userToUserDto(user);
+    }
+
+    public Optional<UserDto> putUser(PutUserDto putUserDto) {
+        Optional<User> optionalUser = findUserByEmail(putUserDto.getEmail());
+        if (optionalUser.isPresent()) {
+            optionalUser.get().setUsername(putUserDto.getUsername());
+            optionalUser.get().setPassword(putUserDto.getPassword());
+            User user = userRepository.save(optionalUser.get());
+            return Optional.of(UserMapper.INSTANCE.userToUserDto(user));
+        }
+        return Optional.empty();
     }
 
     public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
