@@ -73,18 +73,18 @@ public class UserService {
     public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
         Optional<User> optionalUser = findUserByEmail(patchUserDto.getEmail());
         if (optionalUser.isPresent()) {
-            boolean isUptated = false;
+            boolean isUpdated = false;
             if (patchUserDto.getUsername() != null) {
                 optionalUser.get().setUsername(patchUserDto.getUsername());
-                isUptated = true;
+                isUpdated = true;
             }
 
             if (patchUserDto.getPassword() != null) {
                 optionalUser.get().setPassword(patchUserDto.getNewPassword());
-                isUptated = true;
+                isUpdated = true;
             }
 
-            if (isUptated) {
+            if (isUpdated) {
                 User user = userRepository.save(optionalUser.get());
                 return Optional.of(userMapper.userToUserDto(user));
             }
