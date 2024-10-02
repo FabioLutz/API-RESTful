@@ -1,5 +1,6 @@
 package org.project.userManagement.controller;
 
+import jakarta.validation.Valid;
 import org.project.userManagement.dto.CreateUserDto;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.UserDto;
@@ -28,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> postUser(@RequestBody CreateUserDto createUserDto) {
-        if (!(userService.existsByEmail(createUserDto.getEmail()))) {
+    public ResponseEntity<UserDto> postUser(@Valid @RequestBody CreateUserDto createUserDto) {
+        if (!(userService.existsByEmail(createUserDto.getEmail()) || userService.existsByUsername(createUserDto.getUsername()))) {
             UserDto userDto = userService.createUser(createUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
         }
