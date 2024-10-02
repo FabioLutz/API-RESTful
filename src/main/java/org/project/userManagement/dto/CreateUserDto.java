@@ -10,13 +10,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateUserDto {
-    @Email
+    @Email(message = "Invalid email")
     @Size(min = 5, max = 50, message = "The email must be between 5 and 50 characters")
     @NotBlank(message = "The email must not be blank")
     @Column(name = "email", unique = true, nullable = false, length = 50)
     private String email;
 
-    @Size(min = 2, max = 100, message = "The username must be between 2 and 50 characters")
+    @Size(min = 2, max = 100, message = "The username must be between 2 and 100 characters")
     @NotBlank(message = "The username must not be blank")
     @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
