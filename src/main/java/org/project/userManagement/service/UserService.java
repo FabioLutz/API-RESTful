@@ -60,10 +60,10 @@ public class UserService {
     }
 
     public Optional<UserDto> putUser(PutUserDto putUserDto) {
-        Optional<User> optionalUser = findUserByEmail(putUserDto.getEmail());
+        Optional<User> optionalUser = findUserByEmail(putUserDto.email());
         if (optionalUser.isPresent()) {
-            optionalUser.get().setUsername(putUserDto.getUsername());
-            optionalUser.get().setPassword(putUserDto.getPassword());
+            optionalUser.get().setUsername(putUserDto.username());
+            optionalUser.get().setPassword(putUserDto.password());
             User user = userRepository.save(optionalUser.get());
             return Optional.of(userMapper.userToUserDto(user));
         }
@@ -71,16 +71,16 @@ public class UserService {
     }
 
     public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
-        Optional<User> optionalUser = findUserByEmail(patchUserDto.getEmail());
+        Optional<User> optionalUser = findUserByEmail(patchUserDto.email());
         if (optionalUser.isPresent()) {
             boolean isUpdated = false;
-            if (patchUserDto.getUsername() != null) {
-                optionalUser.get().setUsername(patchUserDto.getUsername());
+            if (patchUserDto.username() != null) {
+                optionalUser.get().setUsername(patchUserDto.username());
                 isUpdated = true;
             }
 
-            if (patchUserDto.getPassword() != null) {
-                optionalUser.get().setPassword(patchUserDto.getNewPassword());
+            if (patchUserDto.password() != null) {
+                optionalUser.get().setPassword(patchUserDto.newPassword());
                 isUpdated = true;
             }
 
@@ -93,7 +93,7 @@ public class UserService {
     }
 
     public Boolean deleteUser(DeleteUserDto deleteUserDto) {
-        Optional<User> user = findUserByEmail(deleteUserDto.getEmail());
+        Optional<User> user = findUserByEmail(deleteUserDto.email());
         if (user.isPresent()) {
             userRepository.deleteById(user.get().getId());
             return true;

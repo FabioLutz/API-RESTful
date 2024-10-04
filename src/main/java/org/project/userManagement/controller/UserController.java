@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> postUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        if (!(userService.existsByEmail(createUserDto.getEmail()) || userService.existsByUsername(createUserDto.getUsername()))) {
+        if (!(userService.existsByEmail(createUserDto.email()) || userService.existsByUsername(createUserDto.username()))) {
             UserDto userDto = userService.createUser(createUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
         }
@@ -37,7 +37,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserDto> putUser(@Valid @RequestBody PutUserDto putUserDto) {
-        if (userService.existsByUsername(putUserDto.getUsername())) {
+        if (userService.existsByUsername(putUserDto.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -48,7 +48,7 @@ public class UserController {
 
     @PatchMapping
     public ResponseEntity<UserDto> patchUser(@Valid @RequestBody PatchUserDto patchUserDto) {
-        if (!(userService.existsByUsername(patchUserDto.getUsername()))) {
+        if (!(userService.existsByUsername(patchUserDto.username()))) {
             Optional<UserDto> optionalUserDto = userService.patchUser(patchUserDto);
             if (optionalUserDto.isPresent()) {
                 UserDto userDto = optionalUserDto.get();
