@@ -45,12 +45,12 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public Boolean existsByUsername(String username) {
-        return findUserDtoByUsername(username).isPresent();
+    public boolean existsUserByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
-    public Boolean existsByEmail(String email) {
-        return findUserDtoByEmail(email).isPresent();
+    public boolean existsUserByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public UserDto createUser(CreateUserDto createUserDto) {
@@ -63,7 +63,7 @@ public class UserService {
         Optional<User> optionalUser = findUserByEmail(putUserDto.email());
         if (optionalUser.isPresent()) {
             optionalUser.get().setUsername(putUserDto.username());
-            optionalUser.get().setPassword(putUserDto.password());
+            optionalUser.get().setPassword(putUserDto.newPassword());
             User user = userRepository.save(optionalUser.get());
             return Optional.of(userMapper.userToUserDto(user));
         }
@@ -79,7 +79,7 @@ public class UserService {
                 isUpdated = true;
             }
 
-            if (patchUserDto.password() != null) {
+            if (patchUserDto.newPassword() != null) {
                 optionalUser.get().setPassword(patchUserDto.newPassword());
                 isUpdated = true;
             }
@@ -95,8 +95,8 @@ public class UserService {
     public Boolean deleteUser(DeleteUserDto deleteUserDto) {
         Optional<User> user = findUserByEmail(deleteUserDto.email());
         if (user.isPresent()) {
-            userRepository.deleteById(user.get().getId());
-            return true;
+            userRepository.delete(user.get());
+            return !userRepository.existsByEmail(deleteUserDto.email());
         }
         return false;
     }
