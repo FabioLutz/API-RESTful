@@ -32,4 +32,44 @@ public class PostUserTest extends UserControllerTest {
         response.andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("User"));
     }
+
+    @Test
+    @DisplayName("when Post existing email, must status 409")
+    void postExistingEmail() throws Exception {
+        CreateUserDto createUserDto = new CreateUserDto(
+                "user@mail.tld",
+                "User",
+                "Password123"
+        );
+
+        BDDMockito.given(userService.existsUserByEmail(createUserDto.email())).willReturn(true);
+        BDDMockito.given(userService.existsUserByUsername(createUserDto.username())).willReturn(false);
+        BDDMockito.given(userService.createUser(createUserDto)).willReturn(new UserDto(createUserDto.username()));
+
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createUserDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    @DisplayName("when Post existing username, must status 409")
+    void postExistingUsername() throws Exception {
+        CreateUserDto createUserDto = new CreateUserDto(
+                "user@mail.tld",
+                "User",
+                "Password123"
+        );
+
+        BDDMockito.given(userService.existsUserByEmail(createUserDto.email())).willReturn(false);
+        BDDMockito.given(userService.existsUserByUsername(createUserDto.username())).willReturn(true);
+        BDDMockito.given(userService.createUser(createUserDto)).willReturn(new UserDto(createUserDto.username()));
+
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createUserDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isConflict());
+    }
 }
