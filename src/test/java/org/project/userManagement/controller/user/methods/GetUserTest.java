@@ -16,8 +16,8 @@ public class GetUserTest extends UserControllerTest {
     @DisplayName("when Get valid User, must return username, then status 201")
     void getValidUser() throws Exception {
         String username = "User";
-
         UserDto userDto = new UserDto(username);
+
         BDDMockito.given(userService.findUserDtoByUsername(username)).willReturn(Optional.of(userDto));
 
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/profile/{username}", username));

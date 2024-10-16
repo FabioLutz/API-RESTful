@@ -1,5 +1,6 @@
 package org.project.userManagement.controller.user.methods;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -12,14 +13,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class PostUserTest extends UserControllerTest {
-    @Test
-    @DisplayName("when Post valid User, must return username, then status 201")
-    void postValidUser() throws Exception {
-        CreateUserDto createUserDto = new CreateUserDto(
+    private CreateUserDto createUserDto;
+
+    @BeforeEach
+    protected void setCreateUserDto() {
+        createUserDto = new CreateUserDto(
                 "user@mail.tld",
                 "User",
                 "Password123"
         );
+    }
+
+    @Test
+    @DisplayName("when Post valid User, must return username, then status 201")
+    void postValidUser() throws Exception {
 
         BDDMockito.given(userService.existsUserByEmail(createUserDto.email())).willReturn(false);
         BDDMockito.given(userService.existsUserByUsername(createUserDto.username())).willReturn(false);
@@ -36,11 +43,6 @@ public class PostUserTest extends UserControllerTest {
     @Test
     @DisplayName("when Post existing email, must status 409")
     void postExistingEmail() throws Exception {
-        CreateUserDto createUserDto = new CreateUserDto(
-                "user@mail.tld",
-                "User",
-                "Password123"
-        );
 
         BDDMockito.given(userService.existsUserByEmail(createUserDto.email())).willReturn(true);
         BDDMockito.given(userService.existsUserByUsername(createUserDto.username())).willReturn(false);
@@ -56,11 +58,6 @@ public class PostUserTest extends UserControllerTest {
     @Test
     @DisplayName("when Post existing username, must status 409")
     void postExistingUsername() throws Exception {
-        CreateUserDto createUserDto = new CreateUserDto(
-                "user@mail.tld",
-                "User",
-                "Password123"
-        );
 
         BDDMockito.given(userService.existsUserByEmail(createUserDto.email())).willReturn(false);
         BDDMockito.given(userService.existsUserByUsername(createUserDto.username())).willReturn(true);

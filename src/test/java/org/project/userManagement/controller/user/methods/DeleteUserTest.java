@@ -1,5 +1,6 @@
 package org.project.userManagement.controller.user.methods;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -11,13 +12,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class DeleteUserTest extends UserControllerTest {
-    @Test
-    @DisplayName("When Delete User, must return status 204")
-    void deleteUser() throws Exception {
-        DeleteUserDto deleteUserDto = new DeleteUserDto(
+    private DeleteUserDto deleteUserDto;
+
+    @BeforeEach
+    protected void setDeleteUserDto() {
+        deleteUserDto = new DeleteUserDto(
                 "user@mail.tld",
                 "Password123"
         );
+    }
+
+    @Test
+    @DisplayName("When Delete User, must return status 204")
+    void deleteUser() throws Exception {
 
         BDDMockito.given(userService.deleteUser(deleteUserDto)).willReturn(true);
 
@@ -31,10 +38,6 @@ public class DeleteUserTest extends UserControllerTest {
     @Test
     @DisplayName("When Delete nonexistent User, must return status 404")
     void deleteNonexistentUser() throws Exception {
-        DeleteUserDto deleteUserDto = new DeleteUserDto(
-                "user@mail.tld",
-                "Password123"
-        );
 
         BDDMockito.given(userService.deleteUser(deleteUserDto)).willReturn(false);
 
