@@ -1,7 +1,10 @@
 package org.project.userManagement.controller;
 
 import jakarta.validation.Valid;
-import org.project.userManagement.dto.*;
+import org.project.userManagement.dto.DeleteUserDto;
+import org.project.userManagement.dto.PatchUserDto;
+import org.project.userManagement.dto.PutUserDto;
+import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,15 +27,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @PostMapping
-    public ResponseEntity<UserDto> postUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        if (!(userService.existsUserByEmail(createUserDto.email()) || userService.existsUserByUsername(createUserDto.username()))) {
-            UserDto userDto = userService.createUser(createUserDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
-        }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @PutMapping
