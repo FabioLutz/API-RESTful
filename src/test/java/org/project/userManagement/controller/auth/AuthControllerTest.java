@@ -2,6 +2,7 @@ package org.project.userManagement.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.project.userManagement.controller.AuthController;
+import org.project.userManagement.service.AuthService;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,4 +21,7 @@ public class AuthControllerTest {
 
     @MockBean
     protected UserService userService;
+
+    @MockBean
+    protected AuthService authService;
 }

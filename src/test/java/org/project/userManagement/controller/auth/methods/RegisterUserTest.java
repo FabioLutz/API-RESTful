@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class PostUserTest extends AuthControllerTest {
+public class RegisterUserTest extends AuthControllerTest {
     private CreateUserDto createUserDto;
 
     @BeforeEach
