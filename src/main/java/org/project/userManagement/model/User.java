@@ -16,7 +16,7 @@ import lombok.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true, updatable = false, insertable = false)
+    @Column(name = "id")
     private Long id;
 
     @Email(message = "Invalid email")
