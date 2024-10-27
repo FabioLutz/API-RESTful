@@ -1,10 +1,14 @@
 package org.project.userManagement.service;
 
-import org.project.userManagement.dto.*;
+import org.project.userManagement.dto.DeleteUserDto;
+import org.project.userManagement.dto.PatchUserDto;
+import org.project.userManagement.dto.PutUserDto;
+import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Optional<UserDto> findUserDtoByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
@@ -57,7 +64,8 @@ public class UserService {
         Optional<User> optionalUser = findUserByEmail(putUserDto.email());
         if (optionalUser.isPresent()) {
             optionalUser.get().setUsername(putUserDto.username());
-            optionalUser.get().setPassword(putUserDto.newPassword());
+            String encryptedPassword = passwordEncoder.encode(putUserDto.newPassword());
+            optionalUser.get().setPassword(encryptedPassword);
             User user = userRepository.save(optionalUser.get());
             return Optional.of(userMapper.userToUserDto(user));
         }
@@ -74,7 +82,8 @@ public class UserService {
             }
 
             if (patchUserDto.newPassword() != null) {
-                optionalUser.get().setPassword(patchUserDto.newPassword());
+                String encryptedPassword = passwordEncoder.encode(patchUserDto.newPassword());
+                optionalUser.get().setPassword(encryptedPassword);
                 isUpdated = true;
             }
 

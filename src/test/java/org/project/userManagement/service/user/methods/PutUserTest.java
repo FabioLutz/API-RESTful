@@ -18,17 +18,19 @@ public class PutUserTest extends UserServiceTest {
     void testPutUser_HasExistentUser() {
         String newUsername = "New Username";
         String newPassword = "NewPassword123";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(putUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.putUser(putUserDto);
 
         Assertions.assertTrue(userDtoResult.isPresent());
         Assertions.assertEquals(newUsername, userDtoResult.get().username());
         Assertions.assertEquals(newUsername, user.getUsername());
-        Assertions.assertEquals(newPassword, user.getPassword());
+        Assertions.assertEquals(encryptedPassword, user.getPassword());
     }
 
     @Test
@@ -36,10 +38,12 @@ public class PutUserTest extends UserServiceTest {
     void testPutUser_HasNonexistentUser() {
         String newUsername = "New Username";
         String newPassword = "NewPassword123";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(putUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.putUser(putUserDto);
 

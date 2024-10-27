@@ -18,10 +18,12 @@ public class PatchUserTest extends UserServiceTest {
     void testPatchUser_HasNewUsername() {
         String newUsername = "New Username";
         String password = "Password123";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", "User", password, UserRole.USER);
         PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, password, null);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
 
@@ -36,15 +38,17 @@ public class PatchUserTest extends UserServiceTest {
     void testPatchUser_HasNewPassword() {
         String newPassword = "New Password";
         String username = "User";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", username, "Password123", UserRole.USER);
         PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), null, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
 
         Assertions.assertTrue(userDtoResult.isPresent());
-        Assertions.assertEquals(newPassword, user.getPassword());
+        Assertions.assertEquals(encryptedPassword, user.getPassword());
         Assertions.assertEquals(username, user.getUsername());
         Assertions.assertEquals(username, userDtoResult.get().username());
     }
@@ -56,17 +60,19 @@ public class PatchUserTest extends UserServiceTest {
         String password = "Password123";
         String newUsername = "New Username";
         String newPassword = "New Password";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
         PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
 
         Assertions.assertTrue(userDtoResult.isPresent());
         Assertions.assertEquals(newUsername, userDtoResult.get().username());
         Assertions.assertEquals(newUsername, user.getUsername());
-        Assertions.assertEquals(newPassword, user.getPassword());
+        Assertions.assertEquals(encryptedPassword, user.getPassword());
         Assertions.assertNotEquals(username, user.getPassword());
         Assertions.assertNotEquals(password, user.getPassword());
     }
@@ -76,10 +82,12 @@ public class PatchUserTest extends UserServiceTest {
     void testPatchUser_HasNoNewValues() {
         String username = "User";
         String password = "Password123";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
         PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), null, user.getPassword(), null);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
 
@@ -95,10 +103,12 @@ public class PatchUserTest extends UserServiceTest {
         String password = "Password123";
         String newUsername = "New Username";
         String newPassword = "New Password";
+        String encryptedPassword = "EncryptedPassword";
         User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
         PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
 

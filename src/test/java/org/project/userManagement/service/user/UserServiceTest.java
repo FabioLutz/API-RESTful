@@ -9,11 +9,15 @@ import org.mockito.Spy;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public abstract class UserServiceTest {
 
     @Mock
     protected UserRepository userRepository;
+
+    @Spy
+    protected PasswordEncoder passwordEncoder;
 
     @InjectMocks
     protected UserService userService;
