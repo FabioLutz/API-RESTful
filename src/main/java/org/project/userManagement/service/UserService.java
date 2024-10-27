@@ -53,12 +53,6 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public UserDto createUser(CreateUserDto createUserDto) {
-        User user = userMapper.createUserDtoToUser(createUserDto);
-        user = userRepository.save(user);
-        return userMapper.userToUserDto(user);
-    }
-
     public Optional<UserDto> putUser(PutUserDto putUserDto) {
         Optional<User> optionalUser = findUserByEmail(putUserDto.email());
         if (optionalUser.isPresent()) {

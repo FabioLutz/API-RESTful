@@ -1,8 +1,9 @@
 package org.project.userManagement.controller;
 
 import jakarta.validation.Valid;
-import org.project.userManagement.dto.CreateUserDto;
+import org.project.userManagement.dto.LoginResponseDto;
 import org.project.userManagement.dto.LoginUserDto;
+import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.AuthService;
 import org.project.userManagement.service.UserService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping
 public class AuthController {
     @Autowired
     private UserService userService;
@@ -26,9 +27,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        if (!(userService.existsUserByEmail(createUserDto.email()) || userService.existsUserByUsername(createUserDto.username()))) {
-            UserDto userDto = userService.createUser(createUserDto);
+    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
+        if (!(userService.existsUserByEmail(registerUserDto.email()) || userService.existsUserByUsername(registerUserDto.username()))) {
+            UserDto userDto = authService.registerUser(registerUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();

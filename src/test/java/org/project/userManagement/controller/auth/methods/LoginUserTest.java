@@ -35,8 +35,9 @@ public class LoginUserTest extends AuthControllerTest {
 
         BDDMockito.given(userService.findUserDtoByEmail(loginUserDto.email())).willReturn(Optional.of(userDto));
         BDDMockito.given(authService.verify(loginUserDto)).willReturn(true);
+        BDDMockito.given(userService.existsUserByEmail(loginUserDto.email())).willReturn(true);
 
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginUserDto)));
 
@@ -50,8 +51,9 @@ public class LoginUserTest extends AuthControllerTest {
 
         BDDMockito.given(userService.findUserDtoByEmail(loginUserDto.email())).willReturn(Optional.of(userDto));
         BDDMockito.given(authService.verify(loginUserDto)).willReturn(false);
+        BDDMockito.given(userService.existsUserByEmail(loginUserDto.email())).willReturn(true);
 
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginUserDto)));
 
@@ -64,8 +66,9 @@ public class LoginUserTest extends AuthControllerTest {
 
         BDDMockito.given(userService.findUserDtoByEmail(loginUserDto.email())).willReturn(Optional.empty());
         BDDMockito.given(authService.verify(loginUserDto)).willReturn(false);
+        BDDMockito.given(userService.existsUserByEmail(loginUserDto.email())).willReturn(false);
 
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginUserDto)));
 

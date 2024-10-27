@@ -1,6 +1,8 @@
 package org.project.userManagement.service;
 
 import org.project.userManagement.dto.LoginUserDto;
+import org.project.userManagement.dto.RegisterUserDto;
+import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
@@ -20,5 +22,11 @@ public class AuthService {
     public boolean verify(LoginUserDto loginUserDto) {
         Optional<User> user = userRepository.findByEmail(loginUserDto.email());
         return user.map(value -> value.getPassword().equals(loginUserDto.password())).orElse(false);
+    }
+
+    public UserDto registerUser(RegisterUserDto registerUserDto) {
+        User user = userMapper.registerUserDtoToUser(registerUserDto);
+        user = userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 }
