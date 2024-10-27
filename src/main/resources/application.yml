@@ -7,10 +7,10 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.sql
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/database
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: password
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -19,4 +19,4 @@ spring:
 api:
   security:
     token:
-      secret: "SECRET"
+      secret: ${SECRET}
