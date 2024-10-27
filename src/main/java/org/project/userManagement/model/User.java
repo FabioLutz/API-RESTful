@@ -3,6 +3,7 @@ package org.project.userManagement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -34,4 +35,8 @@ public class User {
     @NotBlank(message = "The password must not be blank")
     @Column(name = "password", nullable = false, length = 128)
     private String password;
+
+    @NotNull(message = "The role must not be null")
+    @Column(name = "role", nullable = false)
+    private UserRole role;
 }

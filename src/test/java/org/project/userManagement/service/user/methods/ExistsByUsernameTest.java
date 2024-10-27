@@ -5,13 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.project.userManagement.model.User;
+import org.project.userManagement.model.UserRole;
 import org.project.userManagement.service.user.UserServiceTest;
 
 public class ExistsByUsernameTest extends UserServiceTest {
     @Test
     @DisplayName("When existsByUsername has existent username, must return true")
     void testExistsByUsername_True() {
-        User user = new User(1L, "user@mail.tld", "User", "Password123");
+        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         Mockito.when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
 
         boolean exists = userService.existsUserByUsername(user.getUsername());

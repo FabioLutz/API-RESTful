@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.project.userManagement.dto.PutUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.model.User;
+import org.project.userManagement.model.UserRole;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class PutUserTest extends UserServiceTest {
     void testPutUser_HasExistentUser() {
         String newUsername = "New Username";
         String newPassword = "NewPassword123";
-        User user = new User(1L, "user@mail.tld", "User", "Password123");
+        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
@@ -35,7 +36,7 @@ public class PutUserTest extends UserServiceTest {
     void testPutUser_HasNonexistentUser() {
         String newUsername = "New Username";
         String newPassword = "NewPassword123";
-        User user = new User(1L, "user@mail.tld", "User", "Password123");
+        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);

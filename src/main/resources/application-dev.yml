@@ -15,3 +15,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+api:
+  security:
+    token:
+      secret: "SECRET"
