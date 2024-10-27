@@ -37,6 +37,7 @@ public class PatchUserTest extends UserControllerTest {
         );
         userDto = new UserDto(newUsername);
 
+        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(true);
         BDDMockito.given(userService.existsUserByUsername(username)).willReturn(false);
         BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.of(userDto));
 
@@ -49,17 +50,18 @@ public class PatchUserTest extends UserControllerTest {
     }
 
     @Test
-    @DisplayName("When Patch User with duplicate data, must return status 409")
+    @DisplayName("When Patch User with duplicate username, must return status 409")
     @WithMockUser
     void patchDuplicateUsername() throws Exception {
         patchUserDto = new PatchUserDto(
                 email,
                 username,
                 password,
-                newPassword
+                null
         );
         userDto = new UserDto(username);
 
+        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(true);
         BDDMockito.given(userService.existsUserByUsername(username)).willReturn(true);
         BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.of(userDto));
 
@@ -69,6 +71,28 @@ public class PatchUserTest extends UserControllerTest {
 
         BDDMockito.verify(userService, Mockito.never()).patchUser(patchUserDto);
         response.andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    @DisplayName("When Patch without username and password, must return status 422")
+    @WithMockUser
+    void patchWithoutNewData() throws Exception {
+        patchUserDto = new PatchUserDto(
+                email,
+                null,
+                password,
+                null
+        );
+
+        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(true);
+        BDDMockito.given(userService.existsUserByUsername(null)).willReturn(false);
+        BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.empty());
+
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.patch("/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patchUserDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
     }
 
     @Test
@@ -82,6 +106,7 @@ public class PatchUserTest extends UserControllerTest {
                 newPassword
         );
 
+        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(false);
         BDDMockito.given(userService.existsUserByUsername(username)).willReturn(false);
         BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.empty());
 
@@ -103,6 +128,7 @@ public class PatchUserTest extends UserControllerTest {
         );
         userDto = new UserDto(newUsername);
 
+        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(false);
         BDDMockito.given(userService.existsUserByUsername(username)).willReturn(false);
         BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.of(userDto));
 
