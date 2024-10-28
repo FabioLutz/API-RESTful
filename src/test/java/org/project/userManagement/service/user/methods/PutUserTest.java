@@ -1,28 +1,34 @@
 package org.project.userManagement.service.user.methods;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.project.userManagement.dto.PutUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.model.User;
-import org.project.userManagement.model.UserRole;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
 
 public class PutUserTest extends UserServiceTest {
+    private PutUserDto putUserDto;
+
+    @BeforeEach
+    protected void setPutUserDto() {
+        putUserDto = new PutUserDto(
+                email,
+                newUsername,
+                password,
+                newPassword
+        );
+    }
+
     @Test
     @DisplayName("When putUser has existent user, must return updated user")
-    void testPutUser_HasExistentUser() {
-        String newUsername = "New Username";
-        String newPassword = "NewPassword123";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
-        PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
+    void putExistentUser() {
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(userRepository.save(user)).thenReturn(user);
         Mockito.when(passwordEncoder.encode(putUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.putUser(putUserDto);
@@ -35,14 +41,9 @@ public class PutUserTest extends UserServiceTest {
 
     @Test
     @DisplayName("When putUser has nonexistent user, must return empty user")
-    void testPutUser_HasNonexistentUser() {
-        String newUsername = "New Username";
-        String newPassword = "NewPassword123";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
-        PutUserDto putUserDto = new PutUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
+    void putNonexistentUser() {
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(userRepository.save(user)).thenReturn(user);
         Mockito.when(passwordEncoder.encode(putUserDto.newPassword())).thenReturn(encryptedPassword);
 
         Optional<UserDto> userDtoResult = userService.putUser(putUserDto);

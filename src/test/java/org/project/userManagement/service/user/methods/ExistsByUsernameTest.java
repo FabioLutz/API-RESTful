@@ -11,7 +11,7 @@ import org.project.userManagement.service.user.UserServiceTest;
 public class ExistsByUsernameTest extends UserServiceTest {
     @Test
     @DisplayName("When existsByUsername has existent username, must return true")
-    void testExistsByUsername_True() {
+    void existsByUsernameExistentUser() {
         User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
         Mockito.when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
 
@@ -22,12 +22,12 @@ public class ExistsByUsernameTest extends UserServiceTest {
 
     @Test
     @DisplayName("When existsByUsername has nonexistent username, must return false")
-    void testExistsByUsername_False() {
+    void existsByUsernameNonexistentUser() {
         String nonExistentUsername = "Nonexistent Username";
         Mockito.when(userRepository.existsByUsername(nonExistentUsername)).thenReturn(false);
 
-        boolean nonExists = userService.existsUserByUsername(nonExistentUsername);
+        boolean exists = userService.existsUserByUsername(nonExistentUsername);
 
-        Assertions.assertFalse(nonExists);
+        Assertions.assertFalse(exists);
     }
 }

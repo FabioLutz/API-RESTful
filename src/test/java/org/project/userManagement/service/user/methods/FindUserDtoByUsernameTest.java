@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.model.User;
-import org.project.userManagement.model.UserRole;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
@@ -14,8 +12,7 @@ import java.util.Optional;
 public class FindUserDtoByUsernameTest extends UserServiceTest {
     @Test
     @DisplayName("When findUserDtoByUsername has existent username, must return the user")
-    void testFindUserDtoByUsername_HasExistentUsername() {
-        User user = new User(1L, "user@mail.tld", "User", "Password123", UserRole.USER);
+    void findUserDtoByExistentUsername() {
         Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         Optional<UserDto> optionalUserDto = userService.findUserDtoByUsername(user.getUsername());
@@ -26,7 +23,7 @@ public class FindUserDtoByUsernameTest extends UserServiceTest {
 
     @Test
     @DisplayName("When findUserDtoByUsername has nonexistent username, must return optional empty")
-    void testFindUserDtoByUsername_HasNonexistentUsername() {
+    void findUserDtoByNonexistentUsername() {
         String nonExistentUsername = "Nonexistent Username";
         Mockito.when(userRepository.findByUsername(nonExistentUsername)).thenReturn(Optional.empty());
 

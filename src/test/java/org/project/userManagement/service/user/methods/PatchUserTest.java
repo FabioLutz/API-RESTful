@@ -7,20 +7,22 @@ import org.mockito.Mockito;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.model.User;
-import org.project.userManagement.model.UserRole;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
 
 public class PatchUserTest extends UserServiceTest {
+    private PatchUserDto patchUserDto;
+
     @Test
     @DisplayName("When patchUser has new username, must return updated user")
-    void testPatchUser_HasNewUsername() {
-        String newUsername = "New Username";
-        String password = "Password123";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", "User", password, UserRole.USER);
-        PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, password, null);
+    void patchNewUsername() {
+        patchUserDto = new PatchUserDto(
+                email,
+                newUsername,
+                password,
+                null
+        );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
@@ -35,12 +37,13 @@ public class PatchUserTest extends UserServiceTest {
 
     @Test
     @DisplayName("When patchUser has new password, must return updated user")
-    void testPatchUser_HasNewPassword() {
-        String newPassword = "New Password";
-        String username = "User";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", username, "Password123", UserRole.USER);
-        PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), null, user.getPassword(), newPassword);
+    void patchNewPassword() {
+        patchUserDto = new PatchUserDto(
+                email,
+                null,
+                password,
+                newPassword
+        );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
@@ -55,14 +58,13 @@ public class PatchUserTest extends UserServiceTest {
 
     @Test
     @DisplayName("When patchUser has new username and new password, must return updated user")
-    void testPatchUser_HasNewUsernameAndNewPassword() {
-        String username = "User";
-        String password = "Password123";
-        String newUsername = "New Username";
-        String newPassword = "New Password";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
-        PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
+    void patchNewUsernameAndNewPassword() {
+        patchUserDto = new PatchUserDto(
+                email,
+                newUsername,
+                password,
+                newPassword
+        );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
@@ -79,12 +81,13 @@ public class PatchUserTest extends UserServiceTest {
 
     @Test
     @DisplayName("When patchUser has no new values, must return empty user")
-    void testPatchUser_HasNoNewValues() {
-        String username = "User";
-        String password = "Password123";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
-        PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), null, user.getPassword(), null);
+    void patchNoValues() {
+        patchUserDto = new PatchUserDto(
+                email,
+                null,
+                password,
+                null
+        );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
@@ -98,14 +101,13 @@ public class PatchUserTest extends UserServiceTest {
 
     @Test
     @DisplayName("When patchUser has nonexistent user, must return empty user")
-    void testPatchUser_HasNonexistentUser() {
-        String username = "User";
-        String password = "Password123";
-        String newUsername = "New Username";
-        String newPassword = "New Password";
-        String encryptedPassword = "EncryptedPassword";
-        User user = new User(1L, "user@mail.tld", username, password, UserRole.USER);
-        PatchUserDto patchUserDto = new PatchUserDto(user.getEmail(), newUsername, user.getPassword(), newPassword);
+    void patchNonexistentUser() {
+        patchUserDto = new PatchUserDto(
+                email,
+                newUsername,
+                password,
+                newPassword
+        );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
