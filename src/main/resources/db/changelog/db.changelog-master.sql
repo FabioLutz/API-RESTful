@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
--- changeset name:1
+-- changeset users-table:1-create-users-table
 CREATE TABLE users_tb (
     id BIGSERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,

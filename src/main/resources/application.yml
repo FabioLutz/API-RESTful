@@ -4,6 +4,7 @@ spring:
       enabled: ALWAYS
 
   liquibase:
+    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.sql
 
   datasource:
@@ -14,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
 
 api:
   security:
