@@ -3,7 +3,6 @@ package org.project.userManagement.controller;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
-import org.project.userManagement.dto.PutUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +26,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @PutMapping
-    public ResponseEntity<UserDto> putUser(@Valid @RequestBody PutUserDto putUserDto) {
-        if (userService.existsUserByUsername(putUserDto.username())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        Optional<UserDto> optionalUserDto = userService.putUser(putUserDto);
-        return optionalUserDto.map(userDto -> ResponseEntity.status(HttpStatus.OK).body(userDto)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-
     }
 
     @PatchMapping

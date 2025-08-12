@@ -2,7 +2,6 @@ package org.project.userManagement.service;
 
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
-import org.project.userManagement.dto.PutUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
@@ -58,18 +57,6 @@ public class UserService {
 
     public boolean existsUserByEmail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    public Optional<UserDto> putUser(PutUserDto putUserDto) {
-        Optional<User> optionalUser = findUserByEmail(putUserDto.email());
-        if (optionalUser.isPresent()) {
-            optionalUser.get().setUsername(putUserDto.username());
-            String encryptedPassword = passwordEncoder.encode(putUserDto.newPassword());
-            optionalUser.get().setPassword(encryptedPassword);
-            User user = userRepository.save(optionalUser.get());
-            return Optional.of(userMapper.userToUserDto(user));
-        }
-        return Optional.empty();
     }
 
     public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
