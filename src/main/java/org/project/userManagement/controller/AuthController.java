@@ -8,6 +8,7 @@ import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.AuthService;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,11 +28,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
-        if (!(userService.existsUserByEmail(registerUserDto.email()) || userService.existsUserByUsername(registerUserDto.username()))) {
+        try {
             UserDto userDto = authService.registerUser(registerUserDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @PostMapping("/login")
