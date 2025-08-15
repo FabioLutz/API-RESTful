@@ -44,9 +44,11 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<UserDto> deleteUser(@Valid @RequestBody DeleteUserDto deleteUserDto) {
-        if (userService.deleteUser(deleteUserDto)) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        try {
+            userService.deleteUser(deleteUserDto);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

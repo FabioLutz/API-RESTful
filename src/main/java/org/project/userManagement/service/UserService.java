@@ -85,12 +85,10 @@ public class UserService {
         return new UserDto(user.getUsername());
     }
 
-    public Boolean deleteUser(DeleteUserDto deleteUserDto) {
-        Optional<User> user = findUserByEmail(deleteUserDto.email());
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-            return !userRepository.existsByEmail(deleteUserDto.email());
-        }
-        return false;
+    public void deleteUser(DeleteUserDto deleteUserDto) {
+        User user = userRepository
+                .findByEmail(deleteUserDto.email())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        userRepository.delete(user);
     }
 }
