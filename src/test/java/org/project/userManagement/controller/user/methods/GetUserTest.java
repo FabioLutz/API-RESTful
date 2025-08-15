@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.UserDto;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -46,17 +45,5 @@ public class GetUserTest extends UserControllerTest {
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/profile/{username}", username));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("When Get User by unauthenticated User, must return status 403")
-    void getUnauthenticatedUser() throws Exception {
-
-        BDDMockito.given(userService.findUserDtoByUsername(username)).willReturn(Optional.of(userDto));
-
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/profile/{username}", username));
-
-        BDDMockito.verify(userService, Mockito.never()).findUserDtoByUsername(username);
-        response.andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 }

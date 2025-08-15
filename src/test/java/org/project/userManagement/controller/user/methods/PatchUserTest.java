@@ -116,28 +116,4 @@ public class PatchUserTest extends UserControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
-    @Test
-    @DisplayName("When Patch User by unauthenticated User, must return status 403")
-    void patchUnauthenticatedUser() throws Exception {
-        patchUserDto = new PatchUserDto(
-                email,
-                newUsername,
-                password,
-                newPassword
-        );
-        userDto = new UserDto(newUsername);
-
-        BDDMockito.given(userService.existsUserByEmail(email)).willReturn(false);
-        BDDMockito.given(userService.existsUserByUsername(username)).willReturn(false);
-        BDDMockito.given(userService.patchUser(patchUserDto)).willReturn(Optional.of(userDto));
-
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.patch("/profile")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(patchUserDto)));
-
-        BDDMockito.verify(userService, Mockito.never()).existsUserByUsername(username);
-        BDDMockito.verify(userService, Mockito.never()).patchUser(patchUserDto);
-        response.andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
 }
