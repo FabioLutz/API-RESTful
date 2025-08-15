@@ -16,10 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -40,8 +39,10 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.map(CustomUserDetails::new).orElse(null);
+        return userRepository
+                .findByEmail(email)
+                .map(CustomUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public String loginUser(LoginUserDto loginUserDto) {

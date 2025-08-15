@@ -1,5 +1,6 @@
 package org.project.userManagement.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.LoginResponseDto;
 import org.project.userManagement.dto.LoginUserDto;
@@ -39,13 +40,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@Valid @RequestBody LoginUserDto loginUserDto) {
         try {
-            if (userService.existsUserByEmail(loginUserDto.email())) {
-                String token = authService.loginUser(loginUserDto);
-                return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(token));
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (BadCredentialsException badCredentialsException) {
+            String token = authService.loginUser(loginUserDto);
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(token));
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }
