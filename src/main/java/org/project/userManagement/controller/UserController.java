@@ -1,16 +1,16 @@
 package org.project.userManagement.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/profile")
@@ -20,12 +20,12 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        Optional<UserDto> optionalUserDto = userService.findUserDtoByUsername(username);
-        if (optionalUserDto.isPresent()) {
-            UserDto userDto = optionalUserDto.get();
-            return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        try {
+            UserDto userDto = userService.findUserDtoByUsername(username);
+            return ResponseEntity.ok(userDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PatchMapping

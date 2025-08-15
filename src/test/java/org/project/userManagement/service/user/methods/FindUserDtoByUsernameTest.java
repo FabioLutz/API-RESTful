@@ -1,34 +1,38 @@
 package org.project.userManagement.service.user.methods;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.project.userManagement.dto.UserDto;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
 
+@ExtendWith(MockitoExtension.class)
 public class FindUserDtoByUsernameTest extends UserServiceTest {
     @Test
     @DisplayName("When findUserDtoByUsername has existent username, must return the user")
     void findUserDtoByExistentUsername() {
         Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
-        Optional<UserDto> optionalUserDto = userService.findUserDtoByUsername(user.getUsername());
+        Assertions.assertDoesNotThrow(() -> userService.findUserDtoByUsername(user.getUsername()));
 
-        Assertions.assertTrue(optionalUserDto.isPresent());
-        Assertions.assertEquals(user.getUsername(), optionalUserDto.get().username());
+        Mockito.verify(userRepository, Mockito.times(1)).findByUsername(user.getUsername());
     }
 
     @Test
-    @DisplayName("When findUserDtoByUsername has nonexistent username, must return optional empty")
+    @DisplayName("When findUserDtoByUsername has nonexistent username, must throw EntityNotFoundException")
     void findUserDtoByNonexistentUsername() {
-        String nonExistentUsername = "Nonexistent Username";
-        Mockito.when(userRepository.findByUsername(nonExistentUsername)).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
-        Optional<UserDto> optionalUserDto = userService.findUserDtoByUsername(nonExistentUsername);
+        EntityNotFoundException entityNotFoundException = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> userService.findUserDtoByUsername(user.getUsername())
+        );
 
-        Assertions.assertTrue(optionalUserDto.isEmpty());
+        Assertions.assertEquals("User not found", entityNotFoundException.getMessage());
     }
 }

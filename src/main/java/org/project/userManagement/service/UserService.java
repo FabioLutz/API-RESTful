@@ -1,5 +1,6 @@
 package org.project.userManagement.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
@@ -7,6 +8,7 @@ import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +25,10 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Optional<UserDto> findUserDtoByUsername(String username) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDto userDto = userMapper.userToUserDto(user);
-            return Optional.of(userDto);
-        }
-        return Optional.empty();
+    public UserDto findUserDtoByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(user -> new UserDto(user.getUsername()))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     public Optional<UserDto> findUserDtoByEmail(String email) {
