@@ -31,32 +31,6 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public Optional<UserDto> findUserDtoByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDto userDto = userMapper.userToUserDto(user);
-            return Optional.of(userDto);
-        }
-        return Optional.empty();
-    }
-
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public boolean existsUserByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    public boolean existsUserByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
     public UserDto patchUser(PatchUserDto patchUserDto) {
         User user = userRepository
                 .findByEmail(patchUserDto.email())
