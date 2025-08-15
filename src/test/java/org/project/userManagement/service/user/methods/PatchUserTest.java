@@ -1,9 +1,12 @@
 package org.project.userManagement.service.user.methods;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.model.User;
@@ -11,6 +14,7 @@ import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
 
+@ExtendWith(MockitoExtension.class)
 public class PatchUserTest extends UserServiceTest {
     private PatchUserDto patchUserDto;
 
@@ -23,14 +27,14 @@ public class PatchUserTest extends UserServiceTest {
                 password,
                 null
         );
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(patchUserDto.email())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
-        Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
+        UserDto userDtoResult = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
 
-        Assertions.assertTrue(userDtoResult.isPresent());
-        Assertions.assertEquals(newUsername, userDtoResult.get().username());
+        Mockito.verify(userRepository).save(user);
+
+        Assertions.assertEquals(newUsername, userDtoResult.username());
         Assertions.assertEquals(newUsername, user.getUsername());
         Assertions.assertEquals(password, user.getPassword());
     }
@@ -48,12 +52,13 @@ public class PatchUserTest extends UserServiceTest {
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
-        Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
+        UserDto userDto = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
 
-        Assertions.assertTrue(userDtoResult.isPresent());
-        Assertions.assertEquals(encryptedPassword, user.getPassword());
+        Mockito.verify(userRepository).save(user);
+
+        Assertions.assertEquals(username, userDto.username());
         Assertions.assertEquals(username, user.getUsername());
-        Assertions.assertEquals(username, userDtoResult.get().username());
+        Assertions.assertEquals(encryptedPassword, user.getPassword());
     }
 
     @Test
@@ -69,18 +74,17 @@ public class PatchUserTest extends UserServiceTest {
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
-        Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
+        UserDto userDtoResult = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
 
-        Assertions.assertTrue(userDtoResult.isPresent());
-        Assertions.assertEquals(newUsername, userDtoResult.get().username());
+        Mockito.verify(userRepository).save(user);
+
+        Assertions.assertEquals(newUsername, userDtoResult.username());
         Assertions.assertEquals(newUsername, user.getUsername());
         Assertions.assertEquals(encryptedPassword, user.getPassword());
-        Assertions.assertNotEquals(username, user.getPassword());
-        Assertions.assertNotEquals(password, user.getPassword());
     }
 
     @Test
-    @DisplayName("When patchUser has no new values, must return empty user")
+    @DisplayName("When patchUser has no new values, must throw IllegalArgumentException")
     void patchNoValues() {
         patchUserDto = new PatchUserDto(
                 email,
@@ -89,18 +93,18 @@ public class PatchUserTest extends UserServiceTest {
                 null
         );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
-        Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
+        IllegalArgumentException illegalArgumentException = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> userService.patchUser(patchUserDto)
+        );
 
-        Assertions.assertTrue(userDtoResult.isEmpty());
-        Assertions.assertEquals(username, user.getUsername());
-        Assertions.assertEquals(password, user.getPassword());
+        Assertions.assertEquals("No fields to update", illegalArgumentException.getMessage());
+        Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 
     @Test
-    @DisplayName("When patchUser has nonexistent user, must return empty user")
+    @DisplayName("When patchUser has nonexistent user, must throw EntityNotFoundException")
     void patchNonexistentUser() {
         patchUserDto = new PatchUserDto(
                 email,
@@ -109,11 +113,13 @@ public class PatchUserTest extends UserServiceTest {
                 newPassword
         );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
 
-        Optional<UserDto> userDtoResult = userService.patchUser(patchUserDto);
+        EntityNotFoundException entityNotFoundException = Assertions.assertThrows(
+                EntityNotFoundException.class,
+                () -> userService.patchUser(patchUserDto)
+        );
 
-        Assertions.assertTrue(userDtoResult.isEmpty());
+        Assertions.assertEquals("User not found", entityNotFoundException.getMessage());
+        Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 }

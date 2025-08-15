@@ -30,18 +30,16 @@ public class UserController {
 
     @PatchMapping
     public ResponseEntity<UserDto> patchUser(@Valid @RequestBody PatchUserDto patchUserDto) {
-        if (userService.existsUserByEmail(patchUserDto.email())) {
-            if (userService.existsUserByUsername(patchUserDto.username())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
-            Optional<UserDto> optionalUserDto = userService.patchUser(patchUserDto);
-            if (optionalUserDto.isPresent()) {
-                UserDto userDto = optionalUserDto.get();
-                return ResponseEntity.status(HttpStatus.OK).body(userDto);
-            }
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        try {
+            UserDto userDto = userService.patchUser(patchUserDto);
+            return ResponseEntity.ok(userDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.unprocessableEntity().build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @DeleteMapping

@@ -57,27 +57,32 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public Optional<UserDto> patchUser(PatchUserDto patchUserDto) {
-        Optional<User> optionalUser = findUserByEmail(patchUserDto.email());
-        if (optionalUser.isPresent()) {
-            boolean isUpdated = false;
-            if (patchUserDto.username() != null) {
-                optionalUser.get().setUsername(patchUserDto.username());
-                isUpdated = true;
-            }
+    public UserDto patchUser(PatchUserDto patchUserDto) {
+        User user = userRepository
+                .findByEmail(patchUserDto.email())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-            if (patchUserDto.newPassword() != null) {
-                String encryptedPassword = passwordEncoder.encode(patchUserDto.newPassword());
-                optionalUser.get().setPassword(encryptedPassword);
-                isUpdated = true;
+        boolean isUpdated = false;
+        if (patchUserDto.username() != null) {
+            if (userRepository.existsByUsername(patchUserDto.username())) {
+                throw new DataIntegrityViolationException("Username already exists");
             }
-
-            if (isUpdated) {
-                User user = userRepository.save(optionalUser.get());
-                return Optional.of(userMapper.userToUserDto(user));
-            }
+            user.setUsername(patchUserDto.username());
+            isUpdated = true;
         }
-        return Optional.empty();
+
+        if (patchUserDto.newPassword() != null) {
+            String encryptedPassword = passwordEncoder.encode(patchUserDto.newPassword());
+            user.setPassword(encryptedPassword);
+            isUpdated = true;
+        }
+
+        if (!isUpdated) {
+            throw new IllegalArgumentException("No fields to update");
+        }
+
+        user = userRepository.save(user);
+        return new UserDto(user.getUsername());
     }
 
     public Boolean deleteUser(DeleteUserDto deleteUserDto) {
