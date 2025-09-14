@@ -75,3 +75,4 @@ local.properties
 
 # others
 .env*
+!.env.example
