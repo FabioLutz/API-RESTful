@@ -1,6 +1,5 @@
 package org.project.userManagement.controller.user.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -8,6 +7,7 @@ import org.mockito.Mockito;
 import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -94,7 +94,7 @@ public class PatchUserTest extends UserControllerTest {
                 newPassword
         );
 
-        Mockito.doThrow(new EntityNotFoundException("User not found"))
+        Mockito.doThrow(new UserNotFoundException("User not found"))
                 .when(userService).patchUser(patchUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/profile")

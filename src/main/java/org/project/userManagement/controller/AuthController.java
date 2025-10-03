@@ -1,6 +1,5 @@
 package org.project.userManagement.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.LoginResponseDto;
 import org.project.userManagement.dto.LoginUserDto;
@@ -44,8 +43,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(token));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

@@ -1,6 +1,5 @@
 package org.project.userManagement.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
@@ -20,12 +19,8 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        try {
-            UserDto userDto = userService.findUserDtoByUsername(username);
-            return ResponseEntity.ok(userDto);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        UserDto userDto = userService.findUserDtoByUsername(username);
+        return ResponseEntity.ok(userDto);
     }
 
     @PatchMapping
@@ -33,8 +28,6 @@ public class UserController {
         try {
             UserDto userDto = userService.patchUser(patchUserDto);
             return ResponseEntity.ok(userDto);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.unprocessableEntity().build();
         } catch (DataIntegrityViolationException e) {
@@ -44,11 +37,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<UserDto> deleteUser(@Valid @RequestBody DeleteUserDto deleteUserDto) {
-        try {
-            userService.deleteUser(deleteUserDto);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.deleteUser(deleteUserDto);
+        return ResponseEntity.noContent().build();
     }
 }

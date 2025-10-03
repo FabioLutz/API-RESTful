@@ -1,6 +1,5 @@
 package org.project.userManagement.service.user.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.model.User;
 import org.project.userManagement.service.user.UserServiceTest;
 
@@ -104,7 +104,7 @@ public class PatchUserTest extends UserServiceTest {
     }
 
     @Test
-    @DisplayName("When patchUser has nonexistent user, must throw EntityNotFoundException")
+    @DisplayName("When patchUser has nonexistent user, must throw UserNotFoundException")
     void patchNonexistentUser() {
         patchUserDto = new PatchUserDto(
                 email,
@@ -114,12 +114,12 @@ public class PatchUserTest extends UserServiceTest {
         );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        EntityNotFoundException entityNotFoundException = Assertions.assertThrows(
-                EntityNotFoundException.class,
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(
+                UserNotFoundException.class,
                 () -> userService.patchUser(patchUserDto)
         );
 
-        Assertions.assertEquals("User not found", entityNotFoundException.getMessage());
+        Assertions.assertEquals("User not found", userNotFoundException.getMessage());
         Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 }
