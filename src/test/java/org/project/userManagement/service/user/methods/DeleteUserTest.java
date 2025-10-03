@@ -1,6 +1,5 @@
 package org.project.userManagement.service.user.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.dto.DeleteUserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
@@ -36,16 +36,16 @@ public class DeleteUserTest extends UserServiceTest {
     }
 
     @Test
-    @DisplayName("When deleteUser has nonexistent user, must throw EntityNotFoundException")
+    @DisplayName("When deleteUser has nonexistent user, must throw UserNotFoundException")
     void deleteNonexistentUser() {
         Mockito.when(userRepository.findByEmail(deleteUserDto.email())).thenReturn(Optional.empty());
 
-        EntityNotFoundException entityNotFoundException = Assertions.assertThrows(
-                EntityNotFoundException.class,
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(
+                UserNotFoundException.class,
                 () -> userService.deleteUser(deleteUserDto)
         );
 
-        Assertions.assertEquals("User not found", entityNotFoundException.getMessage());
+        Assertions.assertEquals("User not found", userNotFoundException.getMessage());
         Mockito.verify(userRepository, Mockito.never()).delete(user);
     }
 }

@@ -1,11 +1,11 @@
 package org.project.userManagement.controller.user.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -32,7 +32,7 @@ public class GetUserTest extends UserControllerTest {
     @WithMockUser
     void getInvalidUser() throws Exception {
         BDDMockito.given(userService.findUserDtoByUsername(username))
-                .willThrow(new EntityNotFoundException("User not found"));
+                .willThrow(new UserNotFoundException("User not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/profile/{username}", username))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

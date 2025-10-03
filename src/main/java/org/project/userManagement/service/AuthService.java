@@ -3,6 +3,7 @@ package org.project.userManagement.service;
 import org.project.userManagement.dto.LoginUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.CustomUserDetails;
 import org.project.userManagement.model.User;
@@ -16,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class AuthService implements UserDetailsService {
         return userRepository
                 .findByEmail(email)
                 .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public String loginUser(LoginUserDto loginUserDto) {

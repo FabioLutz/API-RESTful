@@ -1,12 +1,12 @@
 package org.project.userManagement.controller.auth.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.project.userManagement.controller.auth.AuthControllerTest;
 import org.project.userManagement.dto.LoginUserDto;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -51,7 +51,7 @@ public class LoginUserTest extends AuthControllerTest {
     @Test
     @DisplayName("When login nonexistent user, must return status 404")
     void loginNonexistentUser() throws Exception {
-        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new EntityNotFoundException());
+        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new UserNotFoundException("User not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON)

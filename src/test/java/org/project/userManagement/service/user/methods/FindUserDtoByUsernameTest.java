@@ -1,12 +1,12 @@
 package org.project.userManagement.service.user.methods;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
@@ -24,15 +24,15 @@ public class FindUserDtoByUsernameTest extends UserServiceTest {
     }
 
     @Test
-    @DisplayName("When findUserDtoByUsername has nonexistent username, must throw EntityNotFoundException")
+    @DisplayName("When findUserDtoByUsername has nonexistent username, must throw UserNotFoundException")
     void findUserDtoByNonexistentUsername() {
         Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
-        EntityNotFoundException entityNotFoundException = Assertions.assertThrows(
-                EntityNotFoundException.class,
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(
+                UserNotFoundException.class,
                 () -> userService.findUserDtoByUsername(user.getUsername())
         );
 
-        Assertions.assertEquals("User not found", entityNotFoundException.getMessage());
+        Assertions.assertEquals("User not found", userNotFoundException.getMessage());
     }
 }
