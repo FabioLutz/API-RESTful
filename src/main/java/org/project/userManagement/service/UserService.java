@@ -4,11 +4,11 @@ import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.UserNotFoundException;
+import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class UserService {
         boolean isUpdated = false;
         if (patchUserDto.username() != null) {
             if (userRepository.existsByUsername(patchUserDto.username())) {
-                throw new DataIntegrityViolationException("Username already exists");
+                throw new UsernameAlreadyExistsException("Username already exists");
             }
             user.setUsername(patchUserDto.username());
             isUpdated = true;

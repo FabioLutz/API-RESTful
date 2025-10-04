@@ -8,7 +8,7 @@ import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.UserNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -54,7 +54,7 @@ public class PatchUserTest extends UserControllerTest {
                 null
         );
 
-        Mockito.doThrow(new DataIntegrityViolationException("Username already exists"))
+        Mockito.doThrow(new UsernameAlreadyExistsException("Username already exists"))
                 .when(userService).patchUser(patchUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/profile")

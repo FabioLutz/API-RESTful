@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.UserNotFoundException;
+import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.project.userManagement.model.User;
 import org.project.userManagement.service.user.UserServiceTest;
 
