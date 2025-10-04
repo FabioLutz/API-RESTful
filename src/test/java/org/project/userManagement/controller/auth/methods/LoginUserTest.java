@@ -6,9 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.project.userManagement.controller.auth.AuthControllerTest;
 import org.project.userManagement.dto.LoginUserDto;
-import org.project.userManagement.exception.UserNotFoundException;
+import org.project.userManagement.exception.InvalidCredentialsException;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -40,7 +39,7 @@ public class LoginUserTest extends AuthControllerTest {
     @Test
     @DisplayName("When login invalid password, must return status 401")
     void loginInvalidUser() throws Exception {
-        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new BadCredentialsException(""));
+        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new InvalidCredentialsException("Invalid credentials"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,11 +50,11 @@ public class LoginUserTest extends AuthControllerTest {
     @Test
     @DisplayName("When login nonexistent user, must return status 404")
     void loginNonexistentUser() throws Exception {
-        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new UserNotFoundException("User not found"));
+        BDDMockito.given(authService.loginUser(loginUserDto)).willThrow(new InvalidCredentialsException("User not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginUserDto)))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 }

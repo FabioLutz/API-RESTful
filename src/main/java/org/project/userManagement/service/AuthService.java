@@ -3,6 +3,7 @@ package org.project.userManagement.service;
 import org.project.userManagement.dto.LoginUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.InvalidCredentialsException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.CustomUserDetails;
@@ -15,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,14 +48,18 @@ public class AuthService implements UserDetailsService {
     }
 
     public String loginUser(LoginUserDto loginUserDto) {
-        AuthenticationManager authenticationManager = applicationContext.getBean(AuthenticationManager.class);
+        try {
+            AuthenticationManager authenticationManager = applicationContext.getBean(AuthenticationManager.class);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
+            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
-        UserDetails principal = (UserDetails) authenticate.getPrincipal();
+            UserDetails principal = (UserDetails) authenticate.getPrincipal();
 
-        return tokenService.generateToken(principal);
+            return tokenService.generateToken(principal);
+        } catch (UserNotFoundException | AuthenticationException e) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
     }
 
     public UserDto registerUser(RegisterUserDto registerUserDto) {

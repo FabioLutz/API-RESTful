@@ -1,5 +1,6 @@
 package org.project.userManagement.Advice;
 
+import org.project.userManagement.exception.InvalidCredentialsException;
 import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.exception.UsernameAlreadyExistsException;
@@ -23,5 +24,10 @@ public class UserExceptionHandler {
     @ExceptionHandler(NoUpdateProvidedException.class)
     private ResponseEntity<String> handleNoUpdateProvided(NoUpdateProvidedException exception) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    private ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }
