@@ -7,7 +7,7 @@ import org.mockito.BDDMockito;
 import org.project.userManagement.controller.auth.AuthControllerTest;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.project.userManagement.exception.RegistrationFailedException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -43,7 +43,7 @@ public class RegisterUserTest extends AuthControllerTest {
     @Test
     @DisplayName("when Post existing email, must status 409")
     void postExistingEmail() throws Exception {
-        BDDMockito.doThrow(new DataIntegrityViolationException(""))
+        BDDMockito.doThrow(new RegistrationFailedException("Registration failed"))
                 .when(authService).registerUser(registerUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
@@ -55,7 +55,7 @@ public class RegisterUserTest extends AuthControllerTest {
     @Test
     @DisplayName("when Post existing username, must status 409")
     void postExistingUsername() throws Exception {
-        BDDMockito.doThrow(new DataIntegrityViolationException(""))
+        BDDMockito.doThrow(new RegistrationFailedException("Registration failed"))
                 .when(authService).registerUser(registerUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")

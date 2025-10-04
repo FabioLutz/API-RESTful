@@ -4,6 +4,7 @@ import org.project.userManagement.dto.LoginUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.InvalidCredentialsException;
+import org.project.userManagement.exception.RegistrationFailedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.CustomUserDetails;
@@ -63,6 +64,10 @@ public class AuthService implements UserDetailsService {
     }
 
     public UserDto registerUser(RegisterUserDto registerUserDto) {
+        if (userRepository.existsByEmail(registerUserDto.email()) || userRepository.existsByUsername(registerUserDto.username())) {
+            throw new RegistrationFailedException("Registration failed");
+        }
+
         User newUser = userMapper.registerUserDtoToUser(registerUserDto);
         String encryptedPassword = passwordEncoder.encode(registerUserDto.password());
         newUser.setPassword(encryptedPassword);
