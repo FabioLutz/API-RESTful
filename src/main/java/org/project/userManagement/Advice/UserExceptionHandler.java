@@ -1,5 +1,6 @@
 package org.project.userManagement.Advice;
 
+import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -17,5 +18,10 @@ public class UserExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     private ResponseEntity<String> handleUsernameAlreadyExists(UsernameAlreadyExistsException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(NoUpdateProvidedException.class)
+    private ResponseEntity<String> handleNoUpdateProvided(NoUpdateProvidedException exception) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
     }
 }

@@ -23,12 +23,8 @@ public class UserController {
 
     @PatchMapping
     public ResponseEntity<UserDto> patchUser(@Valid @RequestBody PatchUserDto patchUserDto) {
-        try {
-            UserDto userDto = userService.patchUser(patchUserDto);
-            return ResponseEntity.ok(userDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
+        UserDto userDto = userService.patchUser(patchUserDto);
+        return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping

@@ -3,6 +3,7 @@ package org.project.userManagement.service;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.project.userManagement.mapper.UserMapper;
@@ -51,7 +52,7 @@ public class UserService {
         }
 
         if (!isUpdated) {
-            throw new IllegalArgumentException("No fields to update");
+            throw new NoUpdateProvidedException("No fields to update");
         }
 
         user = userRepository.save(user);

@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.project.userManagement.model.User;
@@ -116,12 +117,12 @@ public class PatchUserTest extends UserServiceTest {
         );
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        IllegalArgumentException illegalArgumentException = Assertions.assertThrows(
-                IllegalArgumentException.class,
+        NoUpdateProvidedException noUpdateProvidedException = Assertions.assertThrows(
+                NoUpdateProvidedException.class,
                 () -> userService.patchUser(patchUserDto)
         );
 
-        Assertions.assertEquals("No fields to update", illegalArgumentException.getMessage());
+        Assertions.assertEquals("No fields to update", noUpdateProvidedException.getMessage());
         Mockito.verify(userRepository, Mockito.never()).save(user);
     }
 
