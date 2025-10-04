@@ -85,6 +85,27 @@ public class PatchUserTest extends UserServiceTest {
     }
 
     @Test
+    @DisplayName("When patchUser has an existing username, must throw UsernameAlreadyExistsException")
+    void patchExistingUsername() {
+        patchUserDto = new PatchUserDto(
+                email,
+                newUsername,
+                password,
+                null
+        );
+        Mockito.when(userRepository.findByEmail(patchUserDto.email())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.existsByUsername(patchUserDto.username())).thenReturn(true);
+
+        UsernameAlreadyExistsException usernameAlreadyExistsException = Assertions.assertThrows(
+                UsernameAlreadyExistsException.class,
+                () -> userService.patchUser(patchUserDto)
+        );
+
+        Assertions.assertEquals("Username already exists", usernameAlreadyExistsException.getMessage());
+        Mockito.verify(userRepository, Mockito.never()).save(user);
+    }
+
+    @Test
     @DisplayName("When patchUser has no new values, must throw IllegalArgumentException")
     void patchNoValues() {
         patchUserDto = new PatchUserDto(
