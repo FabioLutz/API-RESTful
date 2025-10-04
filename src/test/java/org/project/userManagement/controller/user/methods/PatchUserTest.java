@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.springframework.http.MediaType;
@@ -74,7 +75,7 @@ public class PatchUserTest extends UserControllerTest {
                 null
         );
 
-        Mockito.doThrow(new IllegalArgumentException("No fields to update"))
+        Mockito.doThrow(new NoUpdateProvidedException("No fields to update"))
                 .when(userService).patchUser(patchUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/profile")
