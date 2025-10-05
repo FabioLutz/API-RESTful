@@ -4,10 +4,8 @@ import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
-import org.project.userManagement.exception.NoUpdateProvidedException;
 import org.project.userManagement.exception.RegistrationFailedException;
 import org.project.userManagement.exception.UserNotFoundException;
-import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.model.UserRole;
@@ -52,23 +50,9 @@ public class UserService {
                 .findByEmail(patchUserDto.email())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        boolean isUpdated = false;
-        if (patchUserDto.username() != null) {
-            if (userRepository.existsByUsername(patchUserDto.username())) {
-                throw new UsernameAlreadyExistsException("Username already exists");
-            }
-            user.setUsername(patchUserDto.username());
-            isUpdated = true;
-        }
-
         if (patchUserDto.newPassword() != null) {
             String encryptedPassword = passwordEncoder.encode(patchUserDto.newPassword());
             user.setPassword(encryptedPassword);
-            isUpdated = true;
-        }
-
-        if (!isUpdated) {
-            throw new NoUpdateProvidedException("No fields to update");
         }
 
         user = userRepository.save(user);

@@ -10,14 +10,12 @@ public record PatchUserDto(
         @NotBlank(message = "The email must not be blank")
         String email,
 
-        @Size(min = 2, max = 100, message = "The username must be between 2 and 100 characters")
-        String username,
-
         @Size(min = 8, max = 128, message = "The password must be between 8 and 128 characters")
         @NotBlank(message = "The password must not be blank")
         String password,
 
         @Size(min = 8, max = 128, message = "The password must be between 8 and 128 characters")
+        @NotBlank(message = "The new password must not be blank")
         String newPassword
 ) {
 }
