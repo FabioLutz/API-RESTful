@@ -25,7 +25,6 @@ public abstract class UserServiceTest {
     protected final String email = "user@mail.tld";
     protected final String username = "User";
     protected final String password = "Password123";
-    protected final String newUsername = "New Username";
     protected final String newPassword = "NewPassword123";
     protected final String encryptedPassword = "EncryptedPassword";
 
