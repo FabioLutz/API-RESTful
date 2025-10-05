@@ -1,6 +1,9 @@
 package org.project.userManagement.advice;
 
-import org.project.userManagement.exception.*;
+import org.project.userManagement.exception.NoUpdateProvidedException;
+import org.project.userManagement.exception.RegistrationFailedException;
+import org.project.userManagement.exception.UserNotFoundException;
+import org.project.userManagement.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,11 +24,6 @@ public class UserExceptionHandler {
     @ExceptionHandler(NoUpdateProvidedException.class)
     private ResponseEntity<String> handleNoUpdateProvided(NoUpdateProvidedException exception) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    private ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
     @ExceptionHandler(RegistrationFailedException.class)
