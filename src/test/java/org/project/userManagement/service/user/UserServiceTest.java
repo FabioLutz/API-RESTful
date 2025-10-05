@@ -1,14 +1,17 @@
 package org.project.userManagement.service.user;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.project.userManagement.model.User;
 import org.project.userManagement.model.UserRole;
 import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@ExtendWith(MockitoExtension.class)
 public abstract class UserServiceTest {
     @Mock
     protected UserRepository userRepository;
