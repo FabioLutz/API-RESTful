@@ -1,17 +1,17 @@
 package org.project.userManagement.service;
 
+import lombok.RequiredArgsConstructor;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.model.CustomUserDetails;
 import org.project.userManagement.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) {

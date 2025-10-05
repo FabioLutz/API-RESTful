@@ -2,19 +2,19 @@ package org.project.userManagement.controller;
 
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.ChangePasswordDto;
+import lombok.RequiredArgsConstructor;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
