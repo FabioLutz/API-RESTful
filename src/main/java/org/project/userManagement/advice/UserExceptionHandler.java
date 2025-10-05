@@ -1,4 +1,4 @@
-package org.project.userManagement.Advice;
+package org.project.userManagement.advice;
 
 import org.project.userManagement.exception.*;
 import org.springframework.http.HttpStatus;
