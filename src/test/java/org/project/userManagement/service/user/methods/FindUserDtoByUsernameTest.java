@@ -13,21 +13,21 @@ public class FindUserDtoByUsernameTest extends UserServiceTest {
     @Test
     @DisplayName("When findUserDtoByUsername has existent username, must return the user")
     void findUserDtoByExistentUsername() {
-        Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
-        Assertions.assertDoesNotThrow(() -> userService.findUserDtoByUsername(user.getUsername()));
+        Assertions.assertDoesNotThrow(() -> userService.findUserDtoByUsername(username));
 
-        Mockito.verify(userRepository, Mockito.times(1)).findByUsername(user.getUsername());
+        Mockito.verify(userRepository, Mockito.times(1)).findByUsername(username);
     }
 
     @Test
     @DisplayName("When findUserDtoByUsername has nonexistent username, must throw UserNotFoundException")
     void findUserDtoByNonexistentUsername() {
-        Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         UserNotFoundException userNotFoundException = Assertions.assertThrows(
                 UserNotFoundException.class,
-                () -> userService.findUserDtoByUsername(user.getUsername())
+                () -> userService.findUserDtoByUsername(username)
         );
 
         Assertions.assertEquals("User not found", userNotFoundException.getMessage());
