@@ -1,8 +1,8 @@
 package org.project.userManagement.controller;
 
 import jakarta.validation.Valid;
+import org.project.userManagement.dto.ChangePasswordDto;
 import org.project.userManagement.dto.DeleteUserDto;
-import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<UserDto> patchUser(@Valid @RequestBody PatchUserDto patchUserDto) {
-        UserDto userDto = userService.patchUser(patchUserDto);
+    public ResponseEntity<UserDto> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        UserDto userDto = userService.changePassword(changePasswordDto);
         return ResponseEntity.ok(userDto);
     }
 

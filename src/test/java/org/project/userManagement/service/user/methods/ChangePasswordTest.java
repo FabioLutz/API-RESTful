@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.project.userManagement.dto.PatchUserDto;
+import org.project.userManagement.dto.ChangePasswordDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.model.User;
@@ -15,13 +13,12 @@ import org.project.userManagement.service.user.UserServiceTest;
 
 import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class)
-public class PatchUserTest extends UserServiceTest {
-    private PatchUserDto patchUserDto;
+public class ChangePasswordTest extends UserServiceTest {
+    private ChangePasswordDto changePasswordDto;
 
     @BeforeEach
-    protected void setPatchUserDto() {
-        patchUserDto = new PatchUserDto(
+    protected void setChangePasswordDto() {
+        changePasswordDto = new ChangePasswordDto(
                 email,
                 password,
                 newPassword
@@ -29,14 +26,14 @@ public class PatchUserTest extends UserServiceTest {
     }
 
     @Test
-    @DisplayName("When patchUser has new password, must return updated user")
-    void patchNewPassword() {
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+    @DisplayName("When changePassword has existent User, must return updated user")
+    void changePasswordWithExistentUser() {
+        Mockito.when(userRepository.findByEmail(changePasswordDto.email())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
+        Mockito.when(passwordEncoder.encode(changePasswordDto.newPassword())).thenReturn(encryptedPassword);
         Mockito.when(userMapper.userToUserDto(user)).thenReturn(userDto);
 
-        UserDto dtoResult = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
+        UserDto dtoResult = Assertions.assertDoesNotThrow(() -> userService.changePassword(changePasswordDto));
 
         Mockito.verify(userRepository).save(user);
 
@@ -46,13 +43,13 @@ public class PatchUserTest extends UserServiceTest {
     }
 
     @Test
-    @DisplayName("When patchUser has nonexistent user, must throw UserNotFoundException")
-    void patchNonexistentUser() {
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+    @DisplayName("When changePassword has nonexistent User, must throw UserNotFoundException")
+    void changePasswordWithNonexistentUser() {
+        Mockito.when(userRepository.findByEmail(changePasswordDto.email())).thenReturn(Optional.empty());
 
         UserNotFoundException userNotFoundException = Assertions.assertThrows(
                 UserNotFoundException.class,
-                () -> userService.patchUser(patchUserDto)
+                () -> userService.changePassword(changePasswordDto)
         );
 
         Assertions.assertEquals("User not found", userNotFoundException.getMessage());
