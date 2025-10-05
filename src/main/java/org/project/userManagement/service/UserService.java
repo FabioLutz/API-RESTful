@@ -41,7 +41,7 @@ public class UserService {
     public UserDto findUserDtoByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .map(user -> new UserDto(user.getUsername()))
+                .map(user -> userMapper.userToUserDto(user))
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
@@ -56,7 +56,7 @@ public class UserService {
         }
 
         user = userRepository.save(user);
-        return new UserDto(user.getUsername());
+        return userMapper.userToUserDto(user);
     }
 
     public void deleteUser(DeleteUserDto deleteUserDto) {

@@ -14,6 +14,7 @@ public class FindUserDtoByUsernameTest extends UserServiceTest {
     @DisplayName("When findUserDtoByUsername has existent username, must return the user")
     void findUserDtoByExistentUsername() {
         Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        Mockito.when(userMapper.userToUserDto(user)).thenReturn(userDto);
 
         Assertions.assertDoesNotThrow(() -> userService.findUserDtoByUsername(username));
 

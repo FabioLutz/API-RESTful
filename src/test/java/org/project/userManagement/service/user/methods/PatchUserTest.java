@@ -34,12 +34,13 @@ public class PatchUserTest extends UserServiceTest {
         Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Mockito.when(passwordEncoder.encode(patchUserDto.newPassword())).thenReturn(encryptedPassword);
+        Mockito.when(userMapper.userToUserDto(user)).thenReturn(userDto);
 
-        UserDto userDto = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
+        UserDto dtoResult = Assertions.assertDoesNotThrow(() -> userService.patchUser(patchUserDto));
 
         Mockito.verify(userRepository).save(user);
 
-        Assertions.assertEquals(username, userDto.username());
+        Assertions.assertEquals(username, dtoResult.username());
         Assertions.assertEquals(username, user.getUsername());
         Assertions.assertEquals(encryptedPassword, user.getPassword());
     }

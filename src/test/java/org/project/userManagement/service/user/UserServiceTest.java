@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.project.userManagement.dto.UserDto;
+import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.model.UserRole;
 import org.project.userManagement.repositories.UserRepository;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class UserServiceTest {
+    @Mock
+    protected UserMapper userMapper;
+
     @Mock
     protected UserRepository userRepository;
 
@@ -29,6 +34,7 @@ public abstract class UserServiceTest {
     protected final String encryptedPassword = "EncryptedPassword";
 
     protected User user;
+    protected UserDto userDto;
 
     @BeforeEach
     protected void setUser() {
@@ -39,5 +45,10 @@ public abstract class UserServiceTest {
                 password,
                 UserRole.USER
         );
+    }
+
+    @BeforeEach
+    protected void setUserDto(){
+        userDto = new UserDto(username);
     }
 }
