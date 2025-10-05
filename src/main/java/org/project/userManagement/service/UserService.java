@@ -1,5 +1,6 @@
 package org.project.userManagement.service;
 
+import lombok.RequiredArgsConstructor;
 import org.project.userManagement.dto.ChangePasswordDto;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
@@ -10,20 +11,15 @@ import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.User;
 import org.project.userManagement.model.UserRole;
 import org.project.userManagement.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDto registerUser(RegisterUserDto registerUserDto) {
         if (userRepository.existsByEmail(registerUserDto.email()) || userRepository.existsByUsername(registerUserDto.username())) {

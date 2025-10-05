@@ -1,36 +1,22 @@
 package org.project.userManagement.service;
 
+import lombok.RequiredArgsConstructor;
 import org.project.userManagement.dto.LoginUserDto;
 import org.project.userManagement.exception.InvalidCredentialsException;
 import org.project.userManagement.exception.UserNotFoundException;
-import org.project.userManagement.mapper.UserMapper;
-import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.security.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
     public String loginUser(LoginUserDto loginUserDto) {
         try {
