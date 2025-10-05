@@ -4,7 +4,6 @@ import org.project.userManagement.dto.LoginUserDto;
 import org.project.userManagement.exception.InvalidCredentialsException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
-import org.project.userManagement.model.CustomUserDetails;
 import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService implements UserDetailsService {
+public class AuthService {
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -34,14 +32,6 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        return userRepository
-                .findByEmail(email)
-                .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-    }
 
     public String loginUser(LoginUserDto loginUserDto) {
         try {
