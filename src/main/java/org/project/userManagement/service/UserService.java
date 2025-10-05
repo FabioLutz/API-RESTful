@@ -26,9 +26,7 @@ public class UserService {
             throw new RegistrationFailedException("Registration failed");
         }
 
-        User newUser = userMapper.registerUserDtoToUser(registerUserDto);
-        String encryptedPassword = passwordEncoder.encode(registerUserDto.password());
-        newUser.setPassword(encryptedPassword);
+        User newUser = userMapper.registerUserDtoToUser(registerUserDto, passwordEncoder);
         newUser.setRole(UserRole.USER);
         User user = userRepository.save(newUser);
         return userMapper.userToUserDto(user);
