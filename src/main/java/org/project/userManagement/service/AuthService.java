@@ -7,7 +7,6 @@ import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     @Autowired
-    private ApplicationContext applicationContext;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,8 +34,6 @@ public class AuthService {
 
     public String loginUser(LoginUserDto loginUserDto) {
         try {
-            AuthenticationManager authenticationManager = applicationContext.getBean(AuthenticationManager.class);
-
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
