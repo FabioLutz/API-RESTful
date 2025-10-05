@@ -1,15 +1,10 @@
 package org.project.userManagement.service;
 
 import org.project.userManagement.dto.LoginUserDto;
-import org.project.userManagement.dto.RegisterUserDto;
-import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.InvalidCredentialsException;
-import org.project.userManagement.exception.RegistrationFailedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
 import org.project.userManagement.model.CustomUserDetails;
-import org.project.userManagement.model.User;
-import org.project.userManagement.model.UserRole;
 import org.project.userManagement.repositories.UserRepository;
 import org.project.userManagement.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,18 +56,5 @@ public class AuthService implements UserDetailsService {
         } catch (UserNotFoundException | AuthenticationException e) {
             throw new InvalidCredentialsException("Invalid credentials");
         }
-    }
-
-    public UserDto registerUser(RegisterUserDto registerUserDto) {
-        if (userRepository.existsByEmail(registerUserDto.email()) || userRepository.existsByUsername(registerUserDto.username())) {
-            throw new RegistrationFailedException("Registration failed");
-        }
-
-        User newUser = userMapper.registerUserDtoToUser(registerUserDto);
-        String encryptedPassword = passwordEncoder.encode(registerUserDto.password());
-        newUser.setPassword(encryptedPassword);
-        newUser.setRole(UserRole.USER);
-        User user = userRepository.save(newUser);
-        return userMapper.userToUserDto(user);
     }
 }

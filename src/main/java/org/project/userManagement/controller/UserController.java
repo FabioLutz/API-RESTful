@@ -3,31 +3,38 @@ package org.project.userManagement.controller;
 import jakarta.validation.Valid;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.PatchUserDto;
+import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/profile")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{username}")
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
+        UserDto userDto = userService.registerUser(registerUserDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+    }
+
+    @GetMapping("/profile/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
         UserDto userDto = userService.findUserDtoByUsername(username);
         return ResponseEntity.ok(userDto);
     }
 
-    @PatchMapping
+    @PatchMapping("/profile")
     public ResponseEntity<UserDto> patchUser(@Valid @RequestBody PatchUserDto patchUserDto) {
         UserDto userDto = userService.patchUser(patchUserDto);
         return ResponseEntity.ok(userDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/profile")
     public ResponseEntity<UserDto> deleteUser(@Valid @RequestBody DeleteUserDto deleteUserDto) {
         userService.deleteUser(deleteUserDto);
         return ResponseEntity.noContent().build();

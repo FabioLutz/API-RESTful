@@ -1,10 +1,10 @@
-package org.project.userManagement.controller.auth.methods;
+package org.project.userManagement.controller.user.methods;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.project.userManagement.controller.auth.AuthControllerTest;
+import org.project.userManagement.controller.user.UserControllerTest;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.RegistrationFailedException;
@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class RegisterUserTest extends AuthControllerTest {
+public class RegisterUserTest extends UserControllerTest {
     private RegisterUserDto registerUserDto;
 
     private final String username = "User";
@@ -31,7 +31,7 @@ public class RegisterUserTest extends AuthControllerTest {
     void postValidUser() throws Exception {
         UserDto userDto = new UserDto(username);
 
-        BDDMockito.given(authService.registerUser(registerUserDto)).willReturn(userDto);
+        BDDMockito.given(userService.registerUser(registerUserDto)).willReturn(userDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -44,7 +44,7 @@ public class RegisterUserTest extends AuthControllerTest {
     @DisplayName("when Post existing email, must status 409")
     void postExistingEmail() throws Exception {
         BDDMockito.doThrow(new RegistrationFailedException("Registration failed"))
-                .when(authService).registerUser(registerUserDto);
+                .when(userService).registerUser(registerUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +56,7 @@ public class RegisterUserTest extends AuthControllerTest {
     @DisplayName("when Post existing username, must status 409")
     void postExistingUsername() throws Exception {
         BDDMockito.doThrow(new RegistrationFailedException("Registration failed"))
-                .when(authService).registerUser(registerUserDto);
+                .when(userService).registerUser(registerUserDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
