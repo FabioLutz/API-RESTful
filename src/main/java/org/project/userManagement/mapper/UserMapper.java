@@ -8,7 +8,6 @@ import org.project.userManagement.model.User;
 public interface UserMapper {
     UserDto userToUserDto(User user);
 
-    User userDtoToUser(UserDto userDto);
 
     User registerUserDtoToUser(RegisterUserDto registerUserDto);
 }
