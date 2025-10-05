@@ -1,7 +1,7 @@
 package org.project.userManagement.service;
 
+import org.project.userManagement.dto.ChangePasswordDto;
 import org.project.userManagement.dto.DeleteUserDto;
-import org.project.userManagement.dto.PatchUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.RegistrationFailedException;
@@ -45,15 +45,13 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    public UserDto patchUser(PatchUserDto patchUserDto) {
+    public UserDto changePassword(ChangePasswordDto changePasswordDto) {
         User user = userRepository
-                .findByEmail(patchUserDto.email())
+                .findByEmail(changePasswordDto.email())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if (patchUserDto.newPassword() != null) {
-            String encryptedPassword = passwordEncoder.encode(patchUserDto.newPassword());
-            user.setPassword(encryptedPassword);
-        }
+        String encryptedPassword = passwordEncoder.encode(changePasswordDto.newPassword());
+        user.setPassword(encryptedPassword);
 
         user = userRepository.save(user);
         return userMapper.userToUserDto(user);

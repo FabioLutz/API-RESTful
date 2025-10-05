@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record PatchUserDto(
+public record ChangePasswordDto(
         @Email(message = "Invalid email")
         @Size(min = 5, max = 50, message = "The email must be between 5 and 50 characters")
         @NotBlank(message = "The email must not be blank")
