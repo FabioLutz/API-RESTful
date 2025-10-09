@@ -1,6 +1,6 @@
 # API RESTful
 
-Este projeto tem como objetivo estudar como funciona a criação de uma API RESTful utilizando Spring Boot com Java
+Uma API RESTful com CRUD desenvolvida em Java com Spring Boot e persistência em PostgreSQL, rodando via Docker Compose.
 
 ## Como rodar
 
