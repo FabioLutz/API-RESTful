@@ -1,6 +1,6 @@
 # API RESTful
 
-Uma API RESTful com CRUD desenvolvida em Java com Spring Boot e persistência em PostgreSQL, rodando via Docker Compose.
+Uma API completa para cadastro, autenticação e gerenciamento de usuários, com segurança baseada em JWT e migrações de banco gerenciadas pelo Liquibase.
 
 ## Tecnologias usadas
 
@@ -39,3 +39,61 @@ Uma API RESTful com CRUD desenvolvida em Java com Spring Boot e persistência em
 4. Aguarde até que todos os serviços estejam disponíveis
 
 5. A API estará rodando em http://localhost:8080
+
+## Endpoints
+
+Rotas como `PATCH /profile` exigem o header `Authorization: Bearer <token>`.  
+O token é validado usando a biblioteca java-jwt com _secret_ do `.env`.
+
+### Autenticação
+- `POST /login`  
+  Autentica usuário e retorna token JWT  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password"
+    }
+    ```
+  **Exemplo de resposta bem-sucedida (200 OK)**:
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx"
+    }
+    ```
+
+### Usuários
+- `POST /register`  
+  Registra novo usuário (verifica duplicidade de e-mail/username)  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "username": "nome",
+      "password": "Password"
+    }
+    ```
+
+- `GET /profile/{username}`  
+  Retorna dados públicos do usuário.  
+
+- `PATCH /profile`  
+  Altera senha
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password",
+      "newPassword": "NewPassword"
+    }
+    ```
+
+- `DELETE /profile`  
+  Deleta conta  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password"
+    }
+    ```
