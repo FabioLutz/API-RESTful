@@ -16,27 +16,26 @@ Uma API RESTful com CRUD desenvolvida em Java com Spring Boot e persistência em
 
 ## Como rodar
 
-### Configurações do ambiente
+### Pré-requisitos
 
-Defina nas variáveis de ambiente os valores do contexto de seu projeto
+- Docker
+- Docker Compose
 
-Há duas opções:
+### Como rodar
 
-- Definir nas variáveis de ambiente do sistema
-- Criar arquivo `.env` e carregá-lo quando for usar
+1. Clone o repositório:
+    ```shell
+    git clone https://github.com/FabioLutz/API-RESTful.git
+    cd API-RESTful
+    ```
 
-Variáveis de ambiente necessárias:
+2. Crie uma cópia do `.env.example` nomeando de `.env`
 
-| Variável | Descrição | Exemplo |
-|:---:| --- | --- |
-| DB_HOST | Host do banco de dados | localhost |
-| DB_PORT | Porta do banco de dados | 5432 |
-| DB_DATABASE | Nome do banco de dados | db |
-| DB_USER | Usuário do banco de dados | user |
-| DB_PASSWORD | Senha do banco de dados | s3nH4%F0rT3 |
-| SECRET | Segredo para o JWT | segredoseguroeforte |
+3. Inicie os serviços:
+   ```shell
+   docker compose up --build
+   ```
 
-### Rodar a aplicação
+4. Aguarde até que todos os serviços estejam disponíveis
 
-1. Inicie com `docker compose up --build`
-2. Finalize com `docker compose down`
+5. A API estará rodando em http://localhost:8080
