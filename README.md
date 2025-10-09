@@ -2,6 +2,18 @@
 
 Uma API RESTful com CRUD desenvolvida em Java com Spring Boot e persistência em PostgreSQL, rodando via Docker Compose.
 
+## Tecnologias usadas
+
+- **Linguagem**: Java 21
+- **Framework**: Spring Boot 3
+- **Segurança**: Spring Security + JWT (Auth0/java-jwt)
+- **Persistência**: Spring Data JPA + PostgreSQL
+- **Migrations**: Liquibase
+- **Mapeamento**: MapStruct + Lombok
+- **Validação**: Bean Validation (Jakarta)
+- **Containerização**: Docker (multi-stage build) + Docker Compose
+- **Testes**: JUnit 5, Spring Boot Test, Mockito
+
 ## Como rodar
 
 ### Configurações do ambiente
