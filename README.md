@@ -1,55 +1,99 @@
 # API RESTful
 
-Este projeto tem como objetivo estudar como funciona a criação de uma API RESTful utilizando Spring Boot com Java
+Uma API completa para cadastro, autenticação e gerenciamento de usuários, com segurança baseada em JWT e migrações de banco gerenciadas pelo Liquibase.
+
+## Tecnologias usadas
+
+- **Linguagem**: Java 21
+- **Framework**: Spring Boot 3
+- **Segurança**: Spring Security + JWT (Auth0/java-jwt)
+- **Persistência**: Spring Data JPA + PostgreSQL
+- **Migrations**: Liquibase
+- **Mapeamento**: MapStruct + Lombok
+- **Validação**: Bean Validation (Jakarta)
+- **Containerização**: Docker (multi-stage build) + Docker Compose
+- **Testes**: JUnit 5, Spring Boot Test, Mockito
 
 ## Como rodar
 
-Aqui mostra como rodar o sistema no **Linux**
+### Pré-requisitos
 
-Caso utilize outro, talvez seja necessário adaptar algumas coisas
+- Docker
+- Docker Compose
 
-### Configurações do ambiente
+### Como rodar
 
-Defina nas variáveis de ambiente os valores do contexto de seu projeto
+1. Clone o repositório:
+    ```shell
+    git clone https://github.com/FabioLutz/API-RESTful.git
+    cd API-RESTful
+    ```
 
-Há duas opções:
+2. Crie uma cópia do `.env.example` nomeando de `.env`
 
-- Definir nas variáveis de ambiente do sistema
-- Criar arquivo `.env` e carregá-lo quando for usar
+3. Inicie os serviços:
+   ```shell
+   docker compose up --build
+   ```
 
-Variáveis de ambiente necessárias:
+4. Aguarde até que todos os serviços estejam disponíveis
 
-| Variável | Descrição | Exemplo |
-|:---:| --- | --- |
-| DB_HOST | Host do banco de dados | localhost |
-| DB_PORT | Porta do banco de dados | 5432 |
-| DB_DATABASE | Nome do banco de dados | db |
-| DB_USER | Usuário do banco de dados | user |
-| DB_PASSWORD | Senha do banco de dados | s3nH4%F0rT3 |
-| SECRET | Segredo para o JWT | segredoseguroeforte |
+5. A API estará rodando em http://localhost:8080
 
-### Rodar banco de dados
+## Endpoints
 
-A API foi configurada para usar dois tipos de banco de dados:
+Rotas como `PATCH /profile` exigem o header `Authorization: Bearer <token>`.  
+O token é validado usando a biblioteca java-jwt com _secret_ do `.env`.
 
-- **H2**: Em memória e mais rápido para testes rápidos
-- **PostgreSQL via Docker**: Não necessita do PostgreSQL instalado na máquina e é usado para testes mais preciso
+### Autenticação
+- `POST /login`  
+  Autentica usuário e retorna token JWT  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password"
+    }
+    ```
+  **Exemplo de resposta bem-sucedida (200 OK)**:
+    ```json
+    {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx"
+    }
+    ```
 
-#### H2
+### Usuários
+- `POST /register`  
+  Registra novo usuário (verifica duplicidade de e-mail/username)  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "username": "nome",
+      "password": "Password"
+    }
+    ```
 
-Há duas opções:
+- `GET /profile/{username}`  
+  Retorna dados públicos do usuário.  
 
-- **Definir variável**: `SPRING.PROFILES.ACTIVE=dev`
-- **Adicionar ao `.env`**: `export SPRING_PROFILES_ACTIVE=dev`
+- `PATCH /profile`  
+  Altera senha
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password",
+      "newPassword": "NewPassword"
+    }
+    ```
 
-#### PostgreSQL via Docker
-
-1. Inicie com `docker compose up -d`
-2. Finalize com `docker compose down`
-
-### Rodar API
-
-1. Instale a OpenJDK 21 e Maven
-2. Instale dependências com `mvn dependency:resolve`
-3. Inicie com `mvn spring-boot:run`
-4. Finalize dentro dele com `CTRL+C`
+- `DELETE /profile`  
+  Deleta conta  
+  **Corpo**:
+    ```json
+    {
+      "email": "name@email.mail",
+      "password": "Password"
+    }
+    ```
