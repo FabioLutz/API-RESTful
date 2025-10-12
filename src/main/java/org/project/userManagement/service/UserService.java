@@ -8,9 +8,12 @@ import org.project.userManagement.dto.UserDto;
 import org.project.userManagement.exception.RegistrationFailedException;
 import org.project.userManagement.exception.UserNotFoundException;
 import org.project.userManagement.mapper.UserMapper;
+import org.project.userManagement.model.CustomUserDetails;
 import org.project.userManagement.model.User;
 import org.project.userManagement.model.UserRole;
 import org.project.userManagement.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,22 @@ public class UserService {
         return userRepository
                 .findByUsername(username)
                 .map(user -> userMapper.userToUserDto(user))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    public UserDto getOwnProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new IllegalStateException("Authentication principal is not CustomUserDetails");
+        }
+
+        userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long id = userDetails.getId();
+
+        return userRepository
+                .findById(id)
+                .map(userMapper::userToUserDto)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 

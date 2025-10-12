@@ -1,8 +1,8 @@
 package org.project.userManagement.controller;
 
 import jakarta.validation.Valid;
-import org.project.userManagement.dto.ChangePasswordDto;
 import lombok.RequiredArgsConstructor;
+import org.project.userManagement.dto.ChangePasswordDto;
 import org.project.userManagement.dto.DeleteUserDto;
 import org.project.userManagement.dto.RegisterUserDto;
 import org.project.userManagement.dto.UserDto;
@@ -20,6 +20,12 @@ public class UserController {
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
         UserDto userDto = userService.registerUser(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserDto> getOwnProfile() {
+        UserDto userDto = userService.getOwnProfile();
+        return ResponseEntity.ok(userDto);
     }
 
     @GetMapping("/profile/{username}")

@@ -13,6 +13,10 @@ public record CustomUserDetails(User user) implements UserDetails {
         return List.of(new SimpleGrantedAuthority(user.getRole().getRole()));
     }
 
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
     public String getUsername() {
         return user.getEmail();
