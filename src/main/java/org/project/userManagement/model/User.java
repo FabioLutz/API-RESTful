@@ -18,15 +18,15 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", columnDefinition = "VARCHAR(50)", unique = true, nullable = false, length = 50)
+    @Column(name = "email", unique = true, nullable = false, length = 50)
     private String email;
 
-    @Column(name = "username", columnDefinition = "VARCHAR(100)", unique = true, nullable = false, length = 100)
+    @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
 
-    @Column(name = "password", columnDefinition = "VARCHAR(128)", nullable = false, length = 128)
+    @Column(name = "password", nullable = false, length = 128)
     private String password;
 
-    @Column(name = "role", columnDefinition = "SMALLINT", nullable = false)
+    @Column(name = "role", nullable = false, length = 50)
     private UserRole role;
 }
