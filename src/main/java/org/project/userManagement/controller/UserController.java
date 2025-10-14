@@ -18,6 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
         UserDto userDto = userService.registerUser(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
@@ -43,6 +44,7 @@ public class UserController {
     }
 
     @DeleteMapping("/profile")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> deleteUser(@Valid @RequestBody DeleteUserDto deleteUserDto) {
         userService.deleteUser(deleteUserDto);
         return ResponseEntity.noContent().build();
