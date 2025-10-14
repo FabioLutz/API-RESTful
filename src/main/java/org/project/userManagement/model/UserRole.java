@@ -1,12 +1,13 @@
 package org.project.userManagement.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public enum UserRole {
-    USER("ROLE_USER");
+    USER,
+    ADMIN;
 
-    private final String role;
+    public String getAuthority() {
+        return "ROLE_" + name();
+    }
 }

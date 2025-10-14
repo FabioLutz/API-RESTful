@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
@@ -49,6 +47,6 @@ public class TokenService {
     }
 
     private Instant tokenExpirationDate() {
-        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.ofHours(-3));
+        return Instant.now().plusSeconds(900);
     }
 }

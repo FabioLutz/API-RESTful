@@ -27,6 +27,7 @@ public abstract class UserServiceTest {
     @InjectMocks
     protected UserService userService;
 
+    protected final Long id = 42L;
     protected final String email = "user@mail.tld";
     protected final String username = "User";
     protected final String password = "Password123";
@@ -39,7 +40,7 @@ public abstract class UserServiceTest {
     @BeforeEach
     protected void setUser() {
         user = new User(
-                1L,
+                id,
                 email,
                 username,
                 password,

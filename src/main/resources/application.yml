@@ -18,9 +18,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
 
 api:
   security:
     token:
       secret: ${SECRET}
+    initialAdmin:
+      password: ${INITIAL_ADMIN_PASSWORD}

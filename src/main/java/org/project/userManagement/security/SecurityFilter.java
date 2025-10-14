@@ -10,7 +10,6 @@ import org.project.userManagement.model.User;
 import org.project.userManagement.repositories.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,8 +29,8 @@ public class SecurityFilter extends OncePerRequestFilter {
             String email = tokenService.validateToken(token);
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
-                UserDetails userDetails = new CustomUserDetails(user.get());
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, userDetails.getAuthorities());
+                CustomUserDetails userDetails = new CustomUserDetails(user.get());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
