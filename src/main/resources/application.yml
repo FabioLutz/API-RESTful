@@ -24,3 +24,5 @@ api:
   security:
     token:
       secret: ${SECRET}
+    initialAdmin:
+      password: ${INITIAL_ADMIN_PASSWORD}
