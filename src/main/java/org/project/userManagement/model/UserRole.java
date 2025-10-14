@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum UserRole {
-    USER;
+    USER,
+    ADMIN;
 
     public String getAuthority() {
         return "ROLE_" + name();
